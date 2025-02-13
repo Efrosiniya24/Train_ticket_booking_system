@@ -1,4 +1,4 @@
-package org.project.trainticketbookingsystem.Entity;
+package org.project.trainticketbookingsystem.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -28,6 +28,9 @@ public class UserEntity implements UserDetails {
     private String patronymic;
     private String email;
     private String password;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<BookingEntity> bookings;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

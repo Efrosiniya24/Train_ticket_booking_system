@@ -1,10 +1,12 @@
-package org.project.trainticketbookingsystem.Entity;
+package org.project.trainticketbookingsystem.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Table(name = "seat")
@@ -22,4 +24,8 @@ public class SeatEntity {
     private TrainEntity train;
 
     private double price;
+    private boolean isAvailable = true;
+
+    @ManyToMany(mappedBy = "seats")
+    private List<BookingEntity> bookings;
 }
