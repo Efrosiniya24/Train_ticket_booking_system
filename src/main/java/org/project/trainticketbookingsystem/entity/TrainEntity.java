@@ -1,4 +1,4 @@
-package org.project.trainticketbookingsystem.Entity;
+package org.project.trainticketbookingsystem.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

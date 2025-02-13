@@ -1,9 +1,8 @@
-package org.project.trainticketbookingsystem.Entity;
+package org.project.trainticketbookingsystem.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
