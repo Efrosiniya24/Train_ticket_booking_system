@@ -6,29 +6,27 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Entity
-@Table(name = "stop_time")
+@Table
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class RouteStationTimeEntity {
+@AllArgsConstructor
+public class SegmentEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
-    private LocalDateTime dateTime;
 
     @ManyToOne
     @JoinColumn(name = "route_id")
     private RouteEntity route;
 
     @ManyToOne
-    @JoinColumn(name = "station_id")
-    private StationEntity station;
+    @JoinColumn(name = "start_station_id")
+    private StationEntity startStation;
 
-    private int stopOrder;
-
+    @ManyToOne
+    @JoinColumn(name = "end_station_id")
+    private StationEntity endStation;
 }

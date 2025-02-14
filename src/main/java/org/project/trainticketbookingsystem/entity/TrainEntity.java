@@ -19,11 +19,11 @@ public class TrainEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToMany(mappedBy = "trains")
+    @OneToMany(mappedBy = "train")
     private List<RouteEntity> routes;
 
-    @OneToMany(mappedBy = "train", cascade = CascadeType.ALL)
-    private List<SeatEntity> seats;
+    private String train;
 
-    private int numberOfSeats;
+    @OneToMany(mappedBy = "train")
+    private List<CoachEntity> coachEntities;
 }

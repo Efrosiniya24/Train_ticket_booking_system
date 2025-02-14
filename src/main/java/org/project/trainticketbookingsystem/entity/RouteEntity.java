@@ -1,10 +1,7 @@
 package org.project.trainticketbookingsystem.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -14,6 +11,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class RouteEntity {
 
     @Id
@@ -23,11 +21,7 @@ public class RouteEntity {
     @OneToMany(mappedBy = "route", cascade = CascadeType.ALL)
     private List<RouteStationTimeEntity> routeStationTime;
 
-    @ManyToMany
-    @JoinTable(
-            name = "rout_train",
-            joinColumns = @JoinColumn(name = "rout_id"),
-            inverseJoinColumns = @JoinColumn(name = "train_id")
-    )
-    private List<TrainEntity> trains;
+    @ManyToOne
+    @JoinColumn(name = "train_id")
+    private TrainEntity train;
 }

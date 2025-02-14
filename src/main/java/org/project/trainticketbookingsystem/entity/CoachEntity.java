@@ -6,29 +6,28 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
-@Table(name = "stop_time")
+@Table(name = "coach")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RouteStationTimeEntity {
+public class CoachEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    private LocalDateTime dateTime;
+    private int number;
 
-    @ManyToOne
-    @JoinColumn(name = "route_id")
-    private RouteEntity route;
+    private int numberOfSeats;
 
     @ManyToOne
-    @JoinColumn(name = "station_id")
-    private StationEntity station;
+    @JoinColumn(name = "train_id")
+    private TrainEntity train;
 
-    private int stopOrder;
-
+    @OneToMany(mappedBy = "coach")
+    private List<SeatEntity> seats;
 }

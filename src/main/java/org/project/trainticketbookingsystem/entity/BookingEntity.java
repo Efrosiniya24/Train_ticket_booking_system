@@ -31,4 +31,7 @@ public class BookingEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+    @ManyToOne
+    @JoinColumn(name = "segment_id")
+    private SegmentEntity segment;
 }

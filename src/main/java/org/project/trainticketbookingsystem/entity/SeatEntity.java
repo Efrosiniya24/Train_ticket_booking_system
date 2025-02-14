@@ -24,8 +24,11 @@ public class SeatEntity {
     private TrainEntity train;
 
     private double price;
-    private boolean isAvailable = true;
 
     @ManyToMany(mappedBy = "seats")
     private List<BookingEntity> bookings;
+
+    @ManyToOne
+    @JoinColumn(name = "coach_id")
+    private CoachEntity coach;
 }
