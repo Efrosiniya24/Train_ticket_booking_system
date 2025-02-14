@@ -2,7 +2,7 @@ package org.project.trainticketbookingsystem.web;
 
 import lombok.AllArgsConstructor;
 import org.project.trainticketbookingsystem.dto.RouteDTO;
-import org.project.trainticketbookingsystem.service.impl.RouteServiceImpl;
+import org.project.trainticketbookingsystem.service.RouteService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CreateRouteController {
 
-    private final RouteServiceImpl routeService;
+    private final RouteService routeService;
 
     @PostMapping("/create")
     public ResponseEntity<RouteDTO> createRout(@RequestBody RouteDTO routeDTO){
