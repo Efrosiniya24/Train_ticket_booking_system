@@ -6,4 +6,8 @@ import java.util.List;
 
 public interface StationService {
     List<StationDTO> getAllStations();
+
+    void addStation(StationDTO stationDTO);
+
+    void deleteStation(Long id);
 }

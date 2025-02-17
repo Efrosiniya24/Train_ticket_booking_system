@@ -4,9 +4,7 @@ import lombok.AllArgsConstructor;
 import org.project.trainticketbookingsystem.dto.StationDTO;
 import org.project.trainticketbookingsystem.service.StationService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,5 +18,17 @@ public class StationController {
     public ResponseEntity<List<StationDTO>> getAllStations() {
         List<StationDTO> stations = stationService.getAllStations();
         return ResponseEntity.ok(stations);
+    }
+
+    @PostMapping("/add")
+    public ResponseEntity<String> addStation(@RequestBody StationDTO stationDTO) {
+        stationService.addStation(stationDTO);
+        return ResponseEntity.ok("Station is added successfully");
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteStation(@PathVariable Long id) {
+        stationService.deleteStation(id);
+        return ResponseEntity.ok("Station is deleted successfully");
     }
 }

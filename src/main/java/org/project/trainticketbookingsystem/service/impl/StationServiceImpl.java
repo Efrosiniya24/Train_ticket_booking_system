@@ -13,6 +13,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class StationServiceImpl implements StationService {
+
     private final StationRepository stationRepository;
     private final StationMapper stationMapper;
 
@@ -20,5 +21,16 @@ public class StationServiceImpl implements StationService {
     public List<StationDTO> getAllStations() {
         List<StationEntity> stations = stationRepository.findAll();
         return stationMapper.toStationDTO(stations);
+    }
+
+    @Override
+    public void addStation(StationDTO stationDTO) {
+        StationEntity stationEntity = stationMapper.toStationEntity(stationDTO);
+        stationRepository.save(stationEntity);
+    }
+
+    @Override
+    public void deleteStation(Long id) {
+        stationRepository.deleteById(id);
     }
 }
