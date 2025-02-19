@@ -3,12 +3,12 @@ package org.project.trainticketbookingsystem.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.project.trainticketbookingsystem.dto.RouteDTO;
 import org.project.trainticketbookingsystem.entity.RouteEntity;
-import org.project.trainticketbookingsystem.entity.RouteStationTimeEntity;
 import org.project.trainticketbookingsystem.entity.TrainEntity;
 import org.project.trainticketbookingsystem.mapper.RouteMapper;
 import org.project.trainticketbookingsystem.repository.RouteRepository;
 import org.project.trainticketbookingsystem.repository.TrainRepository;
 import org.project.trainticketbookingsystem.service.RouteService;
+import org.project.trainticketbookingsystem.service.RouteStationTimeService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RouteServiceImpl implements RouteService {
     private final RouteMapper routeMapper;
-    private final RouteStationTimeServiceImpl stationTimeService;
+    private final RouteStationTimeService stationTimeService;
     private final TrainRepository trainRepository;
     private final RouteRepository routeRepository;
 
@@ -31,11 +31,10 @@ public class RouteServiceImpl implements RouteService {
                 .train(train)
                 .build();
 
-        List<RouteStationTimeEntity> stationTimeEntities = stationTimeService.create(routeDTO.getRouteStationTimeDTO(), routeEntity);
-
-        routeEntity.setRouteStationTime(stationTimeEntities);
-
         routeRepository.save(routeEntity);
+
+        stationTimeService.create(routeDTO.getRouteStationTimeDTO(), routeEntity);
+
         return routeDTO;
     }
 
