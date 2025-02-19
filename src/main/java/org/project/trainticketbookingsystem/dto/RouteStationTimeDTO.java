@@ -6,7 +6,9 @@ import java.time.LocalDateTime;
 
 @Data
 public class RouteStationTimeDTO {
-    private long id;
+    private Long id;
     private int stopOrder;
-    private LocalDateTime departure;
+    private LocalDateTime departureDate;
+    private LocalDateTime arrivalDate;
+    private StationDTO stationDTO;
 }
