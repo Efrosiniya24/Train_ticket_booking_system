@@ -17,12 +17,13 @@ import java.time.LocalDateTime;
 public class RouteStationTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    private LocalDateTime dateTime;
+    private LocalDateTime departureDate;
+    private LocalDateTime arrivalDate;
 
     @ManyToOne
-    @JoinColumn(name = "route_id")
+    @JoinColumn(name = "route_id", nullable = false)
     private RouteEntity route;
 
     @ManyToOne
