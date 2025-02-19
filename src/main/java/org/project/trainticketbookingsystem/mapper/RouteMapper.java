@@ -9,4 +9,5 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface RouteMapper {
     List<RouteDTO> toRouteDTO(List<RouteEntity> routeEntities);
+    RouteDTO toRouteDTO(RouteEntity routeEntity);
 }
