@@ -6,7 +6,7 @@ import lombok.*;
 import java.util.List;
 
 @Entity
-@Table(name = "rout")
+@Table(name = "route")
 @Getter
 @Setter
 @AllArgsConstructor
