@@ -16,13 +16,13 @@ public class CreateRouteController {
     private final RouteService routeService;
 
     @PostMapping("/create")
-    public ResponseEntity<RouteDTO> createRout(@RequestBody RouteDTO routeDTO){
+    public ResponseEntity<RouteDTO> createRoute(@RequestBody RouteDTO routeDTO) {
         RouteDTO createdRoutDTO = routeService.createRoute(routeDTO);
         return ResponseEntity.ok().body(createdRoutDTO);
     }
 
     @GetMapping("/allRoutes")
-    public ResponseEntity<List<RouteDTO>> getAllRoutes(){
+    public ResponseEntity<List<RouteDTO>> getAllRoutes() {
         List<RouteDTO> routes = routeService.getAllRoutes();
         return ResponseEntity.ok(routes);
     }
