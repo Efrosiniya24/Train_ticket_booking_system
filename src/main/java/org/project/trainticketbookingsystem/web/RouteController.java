@@ -11,7 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/route")
 @AllArgsConstructor
-public class CreateRouteController {
+public class RouteController {
 
     private final RouteService routeService;
 
