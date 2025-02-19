@@ -7,4 +7,5 @@ import org.project.trainticketbookingsystem.entity.RouteStationTimeEntity;
 @Mapper(componentModel = "spring")
 public interface RouteStationTimeMapper {
     RouteStationTimeEntity toRouteStationTimeEntity(RouteStationTimeDTO routeStationTimeDTO);
+    RouteStationTimeDTO toRouteStationTimeDTO(RouteStationTimeEntity routeStationTimeEntity);
 }
