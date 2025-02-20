@@ -40,4 +40,10 @@ public class TrainServiceImpl implements TrainService {
         List<TrainEntity> trainEntities = trainRepository.findAll();
         return trainMapper.toTrainDTO(trainEntities);
     }
+
+    @Override
+    public TrainDTO getTrainById(Long id) {
+        TrainEntity trainEntity = trainRepository.findById(id).get();
+        return trainMapper.toTrainDTO(trainEntity);
+    }
 }

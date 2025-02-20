@@ -8,4 +8,5 @@ public interface TrainService {
     TrainDTO addTrain(TrainDTO train);
 
     List<TrainDTO> getAllTrains();
+    TrainDTO getTrainById(Long id);
 }
