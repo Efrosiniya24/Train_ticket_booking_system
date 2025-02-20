@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.project.trainticketbookingsystem.dto.RouteDTO;
 import org.project.trainticketbookingsystem.dto.RouteStationTimeDTO;
 import org.project.trainticketbookingsystem.dto.SearchTicketDTO;
+import org.project.trainticketbookingsystem.dto.SegmentDTO;
 import org.project.trainticketbookingsystem.entity.RouteEntity;
 import org.project.trainticketbookingsystem.entity.RouteStationTimeEntity;
 import org.project.trainticketbookingsystem.entity.TrainEntity;
@@ -13,6 +14,7 @@ import org.project.trainticketbookingsystem.repository.RouteRepository;
 import org.project.trainticketbookingsystem.repository.TrainRepository;
 import org.project.trainticketbookingsystem.service.RouteService;
 import org.project.trainticketbookingsystem.service.RouteStationTimeService;
+import org.project.trainticketbookingsystem.service.TrainService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +31,7 @@ public class RouteServiceImpl implements RouteService {
     private final RouteRepository routeRepository;
     private final RouteStationTimeMapper routeStationTimeMapper;
     private final StationMapper stationMapper;
+    private final TrainService trainService;
 
     @Transactional
     @Override
@@ -103,5 +106,34 @@ public class RouteServiceImpl implements RouteService {
                 .collect(Collectors.toList());
 
         return routeDTOS;
+    }
+
+    @Override
+    public List<SegmentDTO> getRequirementSegment(List<RouteDTO> routeDTOs, SearchTicketDTO searchTicketDTO) {
+        return routeDTOs.stream()
+                .map(route -> {
+                    List<RouteStationTimeDTO> stations = route.getRouteStationTimeDTO();
+
+                    Optional<RouteStationTimeDTO> departureStation = stations.stream()
+                            .filter(station -> station.getStationDTO().getName().equals(searchTicketDTO.getDepartureCity()))
+                            .findFirst();
+
+                    Optional<RouteStationTimeDTO> arrivalStation = stations.stream()
+                            .filter(station -> station.getStationDTO().getName().equals(searchTicketDTO.getArrivalCity()))
+                            .findFirst();
+
+                    SegmentDTO segmentDTO = SegmentDTO.builder()
+                            .trainDTO(trainService.getTrainById(route.getTrainId()))
+                            .firstCityRoute(route.getRouteStationTimeDTO().get(0).getStationDTO().getName())
+                            .lastCityRoute(route.getRouteStationTimeDTO().get(stations.size() - 1).getStationDTO().getName())
+                            .routeDTO(route)
+                            .departureCity(searchTicketDTO.getDepartureCity())
+                            .arrivalCity(searchTicketDTO.getArrivalCity())
+                            .departureDateTime(departureStation.get().getDepartureDate())
+                            .arrivalDateTime(arrivalStation.get().getArrivalDate())
+                            .build();
+                    return segmentDTO;
+                })
+                .collect(Collectors.toList());
     }
 }
