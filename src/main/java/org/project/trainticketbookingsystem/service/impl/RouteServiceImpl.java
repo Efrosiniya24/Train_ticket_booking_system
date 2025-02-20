@@ -3,11 +3,10 @@ package org.project.trainticketbookingsystem.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.project.trainticketbookingsystem.dto.RouteDTO;
 import org.project.trainticketbookingsystem.dto.RouteStationTimeDTO;
-import org.project.trainticketbookingsystem.dto.StationDTO;
+import org.project.trainticketbookingsystem.dto.SearchTicketDTO;
 import org.project.trainticketbookingsystem.entity.RouteEntity;
 import org.project.trainticketbookingsystem.entity.RouteStationTimeEntity;
 import org.project.trainticketbookingsystem.entity.TrainEntity;
-import org.project.trainticketbookingsystem.mapper.RouteMapper;
 import org.project.trainticketbookingsystem.mapper.RouteStationTimeMapper;
 import org.project.trainticketbookingsystem.mapper.StationMapper;
 import org.project.trainticketbookingsystem.repository.RouteRepository;
@@ -17,7 +16,9 @@ import org.project.trainticketbookingsystem.service.RouteStationTimeService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,6 +50,41 @@ public class RouteServiceImpl implements RouteService {
     @Override
     public List<RouteDTO> getAllRoutes() {
         List<RouteEntity> routeEntities = routeRepository.findAll();
+        return toRouteDTO(routeEntities);
+    }
+
+    @Override
+    public List<RouteDTO> searchRoutes(SearchTicketDTO searchTicketDTO) {
+        String departureCity = searchTicketDTO.getDepartureCity();
+        String arrivalCity = searchTicketDTO.getArrivalCity();
+        LocalDate departureDate = searchTicketDTO.getDepartureDate();
+
+        List<RouteEntity> routeEntities = routeRepository.findAll().stream()
+                .filter(route -> {
+                    List<RouteStationTimeEntity> stations = route.getRouteStationTime();
+
+                    Optional<RouteStationTimeEntity> departureStation = stations.stream()
+                            .filter(station -> station.getStation().getName().equals(departureCity))
+                            .findFirst();
+
+                    Optional<RouteStationTimeEntity> arrivalStation = stations.stream()
+                            .filter(station -> station.getStation().getName().equals(arrivalCity))
+                            .findFirst();
+
+                    boolean hasCorrectDate = stations.stream()
+                            .anyMatch(station -> station.getDepartureDate().toLocalDate().equals(departureDate));
+
+                    if (departureStation.isPresent() && arrivalStation.isPresent() && hasCorrectDate) {
+                        return departureStation.get().getStopOrder() < arrivalStation.get().getStopOrder();
+                    }
+                    return false;
+                })
+                .collect(Collectors.toList());
+        return toRouteDTO(routeEntities);
+    }
+
+    @Override
+    public List<RouteDTO> toRouteDTO(List<RouteEntity> routeEntities) {
 
         List<RouteDTO> routeDTOS = routeEntities.stream()
                 .map(routeEntity -> {
@@ -57,7 +93,7 @@ public class RouteServiceImpl implements RouteService {
                             .routeStationTimeDTO(routeEntity.getRouteStationTime().stream()
                                     .map(routeStationTime -> {
                                         RouteStationTimeDTO routeStationTimeDTO = routeStationTimeMapper.toRouteStationTimeDTO(routeStationTime);
-                                        routeStationTimeDTO.setStationDTO((StationDTO) stationMapper.toStationDTO(routeStationTime.getStation()));
+                                        routeStationTimeDTO.setStationDTO(stationMapper.toStationDTO(routeStationTime.getStation()));
                                         return routeStationTimeDTO;
                                     })
                                     .collect(Collectors.toList()))
