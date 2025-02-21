@@ -3,18 +3,21 @@ package org.project.trainticketbookingsystem.service.impl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.project.trainticketbookingsystem.entity.UserEntity;
 import org.project.trainticketbookingsystem.service.JWTService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
-import java.util.Date;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,11 +28,25 @@ public class JWTServiceImpl implements JWTService {
 
     @Override
     public String generateAccessToken(UserEntity user) {
-        return Jwts.builder()
-                .subject(user.getEmail())
+        Map<String, Object> claims = new HashMap<>();
+        List<String> roles = new ArrayList<>();
+        roles.add("ADMIN");
+        claims.put("roles", user.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList()));
+        return generateToken(claims, user);
+    }
+
+    public String generateToken(
+            Map<String, Object> extraClaims,
+            UserDetails userDetails) {
+        return Jwts
+                .builder()
+                .claims(extraClaims)
+                .subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
-                .signWith(getSignInKey())
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
