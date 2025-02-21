@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.project.trainticketbookingsystem.filter.JWTAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -31,8 +32,21 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/train/auth/**")
-                        .permitAll())
+                        .requestMatchers(HttpMethod.POST,
+                                "/station/add")
+                        .hasAuthority("ADMIN")
+                        .requestMatchers("/train/auth/**",
+                                "/route/allRoutes",
+                                "/route/searchRoutes",
+                                "/station/allStations",
+                                "/train/allTrains")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.POST, "/train/route/create",
+                                "/station/add",
+                                "/station/delete/**",
+                                "/train/addTrain")
+                        .hasAuthority("ADMIN"))
+
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
