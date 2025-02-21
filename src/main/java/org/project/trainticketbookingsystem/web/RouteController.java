@@ -6,6 +6,7 @@ import org.project.trainticketbookingsystem.dto.SearchTicketDTO;
 import org.project.trainticketbookingsystem.dto.SegmentDTO;
 import org.project.trainticketbookingsystem.service.RouteService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class RouteController {
 
     private final RouteService routeService;
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/create")
     public ResponseEntity<RouteDTO> createRoute(@RequestBody RouteDTO routeDTO) {
         RouteDTO createdRoutDTO = routeService.createRoute(routeDTO);

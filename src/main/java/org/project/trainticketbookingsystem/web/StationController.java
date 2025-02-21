@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.project.trainticketbookingsystem.dto.StationDTO;
 import org.project.trainticketbookingsystem.service.StationService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,12 +21,14 @@ public class StationController {
         return ResponseEntity.ok(stations);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/add")
     public ResponseEntity<String> addStation(@RequestBody StationDTO stationDTO) {
         stationService.addStation(stationDTO);
         return ResponseEntity.ok("Station is added successfully");
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteStation(@PathVariable Long id) {
         stationService.deleteStation(id);

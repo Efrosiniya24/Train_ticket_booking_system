@@ -35,6 +35,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .patronymic(requestDTO.getPatronymic())
                 .email(requestDTO.getEmail())
                 .password(passwordEncoder.encode(requestDTO.getPassword()))
+                .role(requestDTO.getRole())
                 .build();
         userRepository.save(user);
 

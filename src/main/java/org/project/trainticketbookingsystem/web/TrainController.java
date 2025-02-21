@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.project.trainticketbookingsystem.dto.TrainDTO;
 import org.project.trainticketbookingsystem.service.TrainService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
 public class TrainController {
     private final TrainService trainService;
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/addTrain")
     private ResponseEntity<TrainDTO> addTrain(@RequestBody TrainDTO trainDTO) {
         TrainDTO train = trainService.addTrain(trainDTO);
