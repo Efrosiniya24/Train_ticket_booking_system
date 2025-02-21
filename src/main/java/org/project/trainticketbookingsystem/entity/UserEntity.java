@@ -2,7 +2,9 @@ package org.project.trainticketbookingsystem.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.project.trainticketbookingsystem.Enum.Role;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -27,12 +29,15 @@ public class UserEntity implements UserDetails{
     private String email;
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<BookingEntity> bookings;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override
