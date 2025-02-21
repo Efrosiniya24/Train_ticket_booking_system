@@ -10,10 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/train/auth")
@@ -37,11 +34,23 @@ public class AuthenticationController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(){
+    public ResponseEntity<String> logout() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication != null){
+        if (authentication != null) {
             SecurityContextHolder.clearContext();
         }
         return ResponseEntity.ok("The exit was successful");
+    }
+
+    @PostMapping("/validateToken")
+    private ResponseEntity<String> validateToken(@RequestHeader("Authorization") String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing or invalid Authorization header");
+        }
+        String token = authHeader.replace("Bearer ", "");
+        boolean isValid = authenticationService.validateToken(token);
+
+        return isValid ? ResponseEntity.ok("Valid Token")
+                : ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
     }
 }

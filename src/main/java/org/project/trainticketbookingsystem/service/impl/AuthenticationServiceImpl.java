@@ -1,5 +1,6 @@
 package org.project.trainticketbookingsystem.service.impl;
 
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.project.trainticketbookingsystem.dto.ResponseDTO;
 import org.project.trainticketbookingsystem.dto.SignInRequestDTO;
@@ -13,6 +14,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
@@ -58,4 +61,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .userId(user.getId())
                 .build();
     }
+
+    @Override
+    public boolean validateToken(String token) {
+        try {
+            Claims claims = jwtService.extractAllClaims(token);
+            return claims.getExpiration().after(new Date());
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 }
