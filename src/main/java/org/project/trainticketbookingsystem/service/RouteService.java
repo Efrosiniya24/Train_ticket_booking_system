@@ -11,6 +11,8 @@ public interface RouteService {
     RouteDTO createRoute(RouteDTO routDTO);
     List<RouteDTO> getAllRoutes();
     List<RouteDTO> searchRoutes(SearchTicketDTO searchTicketDTO);
-    List<RouteDTO> toRouteDTO(List<RouteEntity> routeEntities);
+    List<RouteDTO> toRouteDTOList(List<RouteEntity> routeEntities);
     List<SegmentDTO> getRequirementSegment(List<RouteDTO> routeDTOs, SearchTicketDTO searchTicketDTO);
+    RouteDTO getRouteById(Long id);
+    RouteDTO toRouteDTO(RouteEntity routeEntity);
 }

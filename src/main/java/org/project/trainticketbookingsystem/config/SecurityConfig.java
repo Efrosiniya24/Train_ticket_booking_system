@@ -32,21 +32,18 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST,
-                                "/station/add")
-                        .hasAuthority("ADMIN")
                         .requestMatchers("/train/auth/**",
                                 "/route/allRoutes",
                                 "/route/searchRoutes",
                                 "/station/allStations",
-                                "/train/allTrains")
+                                "/train/allTrains",
+                                "/route/specificRoute/**")
                         .permitAll()
                         .requestMatchers(HttpMethod.POST, "/train/route/create",
                                 "/station/add",
                                 "/station/delete/**",
                                 "/train/addTrain")
                         .hasAuthority("ADMIN"))
-
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

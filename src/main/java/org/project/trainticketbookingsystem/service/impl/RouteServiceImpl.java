@@ -18,6 +18,7 @@ import org.project.trainticketbookingsystem.service.TrainService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -53,7 +54,7 @@ public class RouteServiceImpl implements RouteService {
     @Override
     public List<RouteDTO> getAllRoutes() {
         List<RouteEntity> routeEntities = routeRepository.findAll();
-        return toRouteDTO(routeEntities);
+        return toRouteDTOList(routeEntities);
     }
 
     @Override
@@ -83,29 +84,14 @@ public class RouteServiceImpl implements RouteService {
                     return false;
                 })
                 .collect(Collectors.toList());
-        return toRouteDTO(routeEntities);
+        return toRouteDTOList(routeEntities);
     }
 
     @Override
-    public List<RouteDTO> toRouteDTO(List<RouteEntity> routeEntities) {
-
-        List<RouteDTO> routeDTOS = routeEntities.stream()
-                .map(routeEntity -> {
-                    RouteDTO routeDTO = RouteDTO.builder()
-                            .trainId(routeEntity.getTrain().getId())
-                            .routeStationTimeDTO(routeEntity.getRouteStationTime().stream()
-                                    .map(routeStationTime -> {
-                                        RouteStationTimeDTO routeStationTimeDTO = routeStationTimeMapper.toRouteStationTimeDTO(routeStationTime);
-                                        routeStationTimeDTO.setStationDTO(stationMapper.toStationDTO(routeStationTime.getStation()));
-                                        return routeStationTimeDTO;
-                                    })
-                                    .collect(Collectors.toList()))
-                            .build();
-                    return routeDTO;
-                })
+    public List<RouteDTO> toRouteDTOList(List<RouteEntity> routeEntities) {
+        return routeEntities.stream()
+                .map(this::toRouteDTO)
                 .collect(Collectors.toList());
-
-        return routeDTOS;
     }
 
     @Override
@@ -131,9 +117,31 @@ public class RouteServiceImpl implements RouteService {
                             .arrivalCity(searchTicketDTO.getArrivalCity())
                             .departureDateTime(departureStation.get().getDepartureDate())
                             .arrivalDateTime(arrivalStation.get().getArrivalDate())
+                            .timeRoad(Duration.between(departureStation.get().getDepartureDate(), arrivalStation.get().getArrivalDate()))
                             .build();
                     return segmentDTO;
                 })
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public RouteDTO getRouteById(Long id) {
+        RouteEntity routeEntity = routeRepository.findById(id).orElseThrow(() -> new RuntimeException("Route not found"));
+        return toRouteDTO(routeEntity);
+    }
+
+    @Override
+    public RouteDTO toRouteDTO(RouteEntity routeEntity) {
+        return RouteDTO.builder()
+                .trainId(routeEntity.getTrain().getId())
+                .routeStationTimeDTO(routeEntity.getRouteStationTime().stream()
+                        .map(routeStationTime -> {
+                            RouteStationTimeDTO routeStationTimeDTO = routeStationTimeMapper.toRouteStationTimeDTO(routeStationTime);
+                            routeStationTimeDTO.setStationDTO(stationMapper.toStationDTO(routeStationTime.getStation()));
+                            return routeStationTimeDTO;
+                        })
+                        .collect(Collectors.toList()))
+                .build();
+    }
+
 }

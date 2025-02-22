@@ -1,6 +1,6 @@
 package org.project.trainticketbookingsystem.web;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.project.trainticketbookingsystem.dto.RouteDTO;
 import org.project.trainticketbookingsystem.dto.SearchTicketDTO;
 import org.project.trainticketbookingsystem.dto.SegmentDTO;
@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/route")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class RouteController {
 
     private final RouteService routeService;
@@ -32,9 +32,15 @@ public class RouteController {
     }
 
     @PostMapping("/searchRoutes")
-    private ResponseEntity<List<SegmentDTO>> searchRoute(@RequestBody SearchTicketDTO searchTicketDTO) {
+    public ResponseEntity<List<SegmentDTO>> searchRoute(@RequestBody SearchTicketDTO searchTicketDTO) {
         List<RouteDTO> routeDTOs = routeService.searchRoutes(searchTicketDTO);
         List<SegmentDTO> segmentDTOs = routeService.getRequirementSegment(routeDTOs, searchTicketDTO);
         return ResponseEntity.ok(segmentDTOs);
+    }
+
+    @GetMapping("/specificRoute/{id}")
+    public ResponseEntity<RouteDTO> getRouteById(@PathVariable Long id) {
+        RouteDTO routeDTo = routeService.getRouteById(id);
+        return ResponseEntity.ok(routeDTo);
     }
 }
