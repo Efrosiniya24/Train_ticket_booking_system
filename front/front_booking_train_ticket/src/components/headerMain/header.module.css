@@ -1,0 +1,46 @@
+.headerNotMain {
+    display: flex;
+    background-color: #045952;
+    width:100%;
+    position: fixed;
+    margin: 0;
+    right: 0;
+    top: 0;
+    height: 75px;
+    align-items: center;
+    padding: 0px 83px 0px 83px;
+}
+
+.nav{
+    display: flex;
+    gap: 1000px;
+    width: 100%;
+}
+
+.nav ul{
+    display: flex;
+    padding: 0;
+    justify-items: flex-end;
+    gap: 38px;
+}
+
+.nav li{
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+}
+
+.logo{
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    color: white;
+}
+
+.nav li:hover{
+    transform: scale(1.03);
+    transition: transform 0.1s ease; 
+}
