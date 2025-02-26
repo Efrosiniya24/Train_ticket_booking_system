@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import header from "./header.module.css";
-import allStyle from "../../pages/main/styles/forAllPAges.module.css"
+import allStyle from "../../pages/styles/forAllPAges.module.css"
 
 const HeaderMain = () => {
     return ( 

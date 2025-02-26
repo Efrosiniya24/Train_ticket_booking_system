@@ -1,0 +1,83 @@
+.mainPage{
+    background-color: #EBEDEF;
+    width: 100%;
+    height: 100vh;
+}
+
+.container{
+    display: flex;
+    margin-top: 75px;
+    padding-top: 33px;
+    justify-content:  center;
+}
+
+.box{
+    display: flex;
+    background-color: #EBEDEF;
+    width: 1220px;
+    height: 650px;
+    box-shadow: 4px 2px 15px 0px rgba(0, 0, 0, 0.16);
+    border-radius: 70px;
+    padding: 65px 46px 221px 65px;
+    gap: 125px;
+}
+
+.rightPart{
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+}
+
+.text{
+    display: flex;
+    flex-direction: column;
+    font-size: 77px;
+    font-weight: bold;
+    line-height: 1.1;
+}
+
+.buttons{
+    display: flex;
+    gap:22px;
+}
+
+.buttonMainPage{
+    background-color: #045952;
+    border-radius: 25px;
+    padding: 14px 32px ;
+    border: transparent;
+    color: white;
+    font-weight: bold;
+    font-size: 17px;
+    cursor: pointer;
+}
+
+.buttonMainPage:hover{
+    transform: scale(1.03);
+    transition: transform 0.1s ease; 
+}
+
+@keyframes shake {
+    0% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-3px); 
+    }
+    50% {
+        transform: translateX(3px); 
+    }
+    75% {
+        transform: translateX(-3px); 
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+.photo{
+    width: 520px;
+    height: auto;
+    animation: shake 8s ease-in-out infinite;
+}
+
