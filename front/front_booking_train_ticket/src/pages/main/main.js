@@ -19,9 +19,11 @@ const Main = () => {
                             <button className={style.buttonMainPage}>
                                 Найти билет
                             </button>
-                            <button className={style.buttonMainPage}>
-                                Войти
-                            </button>
+                            <NavLink to="/signIn">
+                                <button className={style.buttonMainPage}>
+                                    Войти
+                                </button>
+                            </NavLink>
                         </div>
                     </div>
                     <div>
