@@ -4,6 +4,7 @@
     height: 100vh;
     background-color: #BDD1D4;
     flex-direction: row;
+    position: fixed;
 }
 
 .menuIcon{
