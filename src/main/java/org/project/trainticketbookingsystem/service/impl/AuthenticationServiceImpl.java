@@ -49,7 +49,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public ResponseDTO signIn(SignInRequestDTO requestDTO) {
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(requestDTO.getEmail(), requestDTO.getPassword())
+                new UsernamePasswordAuthenticationToken(
+                        requestDTO.getEmail(),
+                        requestDTO.getPassword())
         );
 
         UserEntity user = userRepository.findByEmail(requestDTO.getEmail())
@@ -60,6 +62,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return ResponseDTO.builder()
                 .accessToken(token)
                 .userId(user.getId())
+                .role(user.getRole().name())
                 .build();
     }
 
