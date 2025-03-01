@@ -1,10 +1,7 @@
 package org.project.trainticketbookingsystem.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.project.trainticketbookingsystem.dto.RouteDTO;
-import org.project.trainticketbookingsystem.dto.RouteStationTimeDTO;
-import org.project.trainticketbookingsystem.dto.SearchTicketDTO;
-import org.project.trainticketbookingsystem.dto.SegmentDTO;
+import org.project.trainticketbookingsystem.dto.*;
 import org.project.trainticketbookingsystem.entity.RouteEntity;
 import org.project.trainticketbookingsystem.entity.RouteStationTimeEntity;
 import org.project.trainticketbookingsystem.entity.TrainEntity;
@@ -37,7 +34,7 @@ public class RouteServiceImpl implements RouteService {
     @Transactional
     @Override
     public RouteDTO createRoute(RouteDTO routeDTO) {
-        TrainEntity train = trainRepository.findById(routeDTO.getTrainId()).orElseThrow(() -> new RuntimeException("Train is not found"));
+        TrainEntity train = trainRepository.findById(routeDTO.getTrain().getId()).orElseThrow(() -> new RuntimeException("Train is not found"));
 
         RouteEntity routeEntity = RouteEntity.builder()
                 .train(train)
@@ -109,7 +106,7 @@ public class RouteServiceImpl implements RouteService {
                             .findFirst();
 
                     SegmentDTO segmentDTO = SegmentDTO.builder()
-                            .trainDTO(trainService.getTrainById(route.getTrainId()))
+                            .trainDTO(trainService.getTrainById(route.getTrain().getId()))
                             .firstCityRoute(route.getRouteStationTimeDTO().get(0).getStationDTO().getName())
                             .lastCityRoute(route.getRouteStationTimeDTO().get(stations.size() - 1).getStationDTO().getName())
                             .routeDTO(route)
@@ -132,15 +129,19 @@ public class RouteServiceImpl implements RouteService {
 
     @Override
     public RouteDTO toRouteDTO(RouteEntity routeEntity) {
+        List<RouteStationTimeDTO> routeStationTimeDTOList = routeEntity.getRouteStationTime().stream()
+                .map(routeStationTime -> {
+                    RouteStationTimeDTO routeStationTimeDTO = routeStationTimeMapper.toRouteStationTimeDTO(routeStationTime);
+                    routeStationTimeDTO.setStationDTO(stationMapper.toStationDTO(routeStationTime.getStation()));
+                    return routeStationTimeDTO;
+                })
+                .collect(Collectors.toList());
+
+        TrainDTO trainDTO = trainService.getTrainById(routeEntity.getTrain().getId());
+
         return RouteDTO.builder()
-                .trainId(routeEntity.getTrain().getId())
-                .routeStationTimeDTO(routeEntity.getRouteStationTime().stream()
-                        .map(routeStationTime -> {
-                            RouteStationTimeDTO routeStationTimeDTO = routeStationTimeMapper.toRouteStationTimeDTO(routeStationTime);
-                            routeStationTimeDTO.setStationDTO(stationMapper.toStationDTO(routeStationTime.getStation()));
-                            return routeStationTimeDTO;
-                        })
-                        .collect(Collectors.toList()))
+                .train(trainDTO)
+                .routeStationTimeDTO(routeStationTimeDTOList)
                 .build();
     }
 
