@@ -16,6 +16,7 @@
     flex-direction: column;
     gap: 30px;
 }
+
 .addToute{
     width: 650px;
     min-height: auto;
@@ -24,23 +25,10 @@
     padding-bottom: 30px;
 }
 
-.firstRowAdd{
-    display: flex;
-    padding: 20px;
-    justify-content:center; 
-    align-items: center; 
-    width: 100%; 
-}
-
 .route{
     position: fixed;
     font-weight: bold;
     font-size: 23px;
-}
-
-.firstRowAdd p{
-    padding-left: 590px;
-    cursor: pointer;
 }
 
 .partOfContent{
@@ -55,47 +43,6 @@
     flex-direction: column;
     gap: 20px;
 }
-
-.chooseLine{
-    display: flex;
-    gap: 17px;
-}
-
-.param{
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-}
-
-.param h3{
-    color: #045952;
-    font-size: 14px;
-    font-weight: bold;
-}
-
-.param input{
-    border: none;
-    background-color: #FFFFFF;
-    border-radius: 20px;
-    padding: 5px 15px;
-    width: 178px;
-    outline: none;
-}
-
-.buttonMainPage{
-    background-color: #045952;
-    border-radius: 20px;
-    padding: 9px 7px 9px 7px ;
-    border: transparent;
-    color: white;
-    font-weight: bold;
-    font-size: 13px;
-    cursor: pointer;
-    max-width: 235px;
-    width: auto;
-    box-sizing: border-box; 
-}
-
 
 .stationForm{
     display: flex;

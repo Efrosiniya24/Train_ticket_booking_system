@@ -212,17 +212,17 @@ const RoutePage = () => {
                     <div className={style.rightPart}>
                         {isAddVisible && (
                             <div className={style.addToute}>
-                                <div className={style.firstRowAdd}>
+                                <div className={commonStyle.firstRowAdd}>
                                     <h1 className={style.route}>Добавить маршрут</h1>
                                     <p onClick={toggleAddVisibility}>x</p>
                                 </div>
                                 <div className={style.contentAddRow}>
                                     <div className={style.partOfContent}>
                                         {stations.map((station, index) => (
-                                            <div key={index} className={style.chooseLine}>
+                                            <div key={index} className={commonStyle.chooseLine}>
                                                 <div className={style.param}>
                                                     <div key={index} className="chooseLine">
-                                                        <div className={style.param}>
+                                                        <div className={commonStyle.param}>
                                                             <h3>Станция</h3>
                                                             <input 
                                                                 type="text"
@@ -243,7 +243,7 @@ const RoutePage = () => {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className={style.param}>
+                                                <div className={commonStyle.param}>
                                                     <h3>Дата отправления</h3>
                                                     <input 
                                                         type="datetime-local" 
@@ -255,7 +255,7 @@ const RoutePage = () => {
                                                         }}
                                                     />
                                                 </div>
-                                                <div className={style.param}>
+                                                <div className={commonStyle.param}>
                                                     <h3>Дата прибытия</h3>
                                                     <input 
                                                         type="datetime-local" 
@@ -275,13 +275,13 @@ const RoutePage = () => {
                                             </div>
                                         ))}
                                         <button 
-                                            className={style.buttonMainPage}
+                                            className={commonStyle.buttonMainPage}
                                             onClick={addStation}>
                                             Добавить следующую станцию
                                         </button>   
                                     </div>
                                     <div className={style.partOfContent}>
-                                        <div className={style.param}>
+                                        <div className={commonStyle.param}>
                                             <h3>Поезд</h3>
                                             <input 
                                                 type="text"
@@ -299,7 +299,7 @@ const RoutePage = () => {
                                                 ))}
                                             </datalist>
                                         </div>
-                                        <button className={style.buttonMainPage} onClick={handleSaveRoute}>
+                                        <button className={commonStyle.buttonMainPage} onClick={handleSaveRoute}>
                                             Сохранить маршрут
                                         </button>
                                     </div>
@@ -312,7 +312,7 @@ const RoutePage = () => {
                                 <div className={style.stationContent}>
                                     <div className={style.addStation}>
                                         <div><h1 className={style.route}>Добавить станцию</h1></div>
-                                        <div className={style.param}>
+                                        <div className={commonStyle.param}>
                                             <h3>Введите название станции</h3>
                                             <input 
                                                 type="text" 
@@ -320,7 +320,7 @@ const RoutePage = () => {
                                                 value={newStationName}
                                                 onChange={(e) => setNewStationName(e.target.value)}
                                             />
-                                            <button className={style.buttonMainPage} onClick={handleSaveStation}>
+                                            <button className={commonStyle.buttonMainPage} onClick={handleSaveStation}>
                                                 Сохранить станцию
                                             </button>
                                         </div>
