@@ -5,6 +5,7 @@
     background-color: #BDD1D4;
     flex-direction: row;
     position: fixed;
+    top: 0;
 }
 
 .menuIcon{
