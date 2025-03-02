@@ -34,7 +34,12 @@
     margin-left: 20px;
     margin-top: 40px;
 }
+
 .menuLine p{
     font-size: 18px;
     font-weight: bold;
+}
+
+.sideBar li{
+    padding-top: 20px;
 }
