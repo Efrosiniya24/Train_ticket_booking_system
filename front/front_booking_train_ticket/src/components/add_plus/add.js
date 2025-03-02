@@ -1,8 +1,8 @@
 import style from "./add.module.css"
 
-const Plus = () => {
+const Plus = ({onClick}) => {
     return ( 
-        <div className={style.plus}>
+        <div className={style.plus} onClick={onClick}>
             <p>+</p>
         </div>
     );
