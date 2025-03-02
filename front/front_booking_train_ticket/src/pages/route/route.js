@@ -10,10 +10,12 @@ const RoutePage = () => {
     const [isLoading, setIsLoading] = useState(false); 
     const [error, setError] = useState(null);
     const [isAddVisible, setIsAddVisible] = useState(false);
+    const [isStationVisible, setIsStationVisible] = useState(false);
     const [stations, setStations] = useState([{ station: "", departureDate: "", arrivalDate: "" }]); 
     const [allStations, setAllStations] = useState([]);
     const [allTrains, setAllTrains] = useState([]); 
     const [selectedTrain, setSelectedTrain] = useState("");
+    const [newStationName, setNewStationName] = useState("");
 
     useEffect(() => {
         const fetchData = async () => {
@@ -66,6 +68,10 @@ const RoutePage = () => {
 
     const toggleAddVisibility = () => {
         setIsAddVisible(!isAddVisible);
+    };
+
+    const toggleStationVisibility = () => {
+        setIsStationVisible(!isStationVisible);
     };
 
     const addStation = () => {
@@ -132,16 +138,48 @@ const RoutePage = () => {
         setIsAddVisible(true); 
     };
 
+    const handleSaveStation = async () => {
+        if (!newStationName.trim()) {
+            alert("Введите название станции!");
+            return;
+        }
+    
+        const token = localStorage.getItem("accessToken");
+    
+        try {
+            const response = await axios.post(
+                "http://localhost:8080/station/add",
+                { name: newStationName },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    }
+                }
+            );
+    
+            alert("Станция успешно добавлена!");
+
+            setAllStations([...allStations, { id: response.data.id, name: newStationName }]);
+            setNewStationName(""); 
+    
+        } catch (error) {
+            console.error("Ошибка при сохранении станции:", error);
+            alert("Ошибка при сохранении станции!");
+        }
+    };
+    
+
     return ( 
         <div>
             <SideBarAdmin/>
             <div className={style.container}>
                 <div className={style.row}>
-                    <p className={style.stations}>Станции</p>
+                    <p className={style.stations} onClick={toggleStationVisibility}>Станции</p>
                     <h1 className={style.routes}>Маршруты</h1>
                 </div>
                 <div className={style.secondPart}>
-                    <Add onClick={toggleAddVisibility} />
+                    <Add onClick={toggleAddVisibility}/>
                     <table className={style.tableRoute}>        
                         <thead className={style.theadRoute}>
                             <tr className={style.first}>
@@ -170,103 +208,142 @@ const RoutePage = () => {
                             ))}
                         </tbody>
                     </table>
-
-                    {isAddVisible && (
-                        <div className={style.addToute}>
-                            <div className={style.firstRowAdd}>
-                                <h1 className={style.route}>Добавить маршрут</h1>
-                                <p onClick={toggleAddVisibility}>x</p>
-                            </div>
-                            <div className={style.contentAddRow}>
-                                <div className={style.partOfContent}>
-                                    {stations.map((station, index) => (
-                                        <div key={index} className={style.chooseLine}>
-                                            <div className={style.param}>
-                                                <div key={index} className="chooseLine">
-                                                    <div className={style.param}>
-                                                        <h3>Станция</h3>
-                                                        <input 
-                                                            type="text"
-                                                            list={`stationsList-${index}`}
-                                                            placeholder="Введите станцию"
-                                                            value={station.station}
-                                                            onChange={(e) => {
-                                                                const newStations = [...stations];
-                                                                newStations[index].station = e.target.value;
-                                                                setStations(newStations);
-                                                            }}
-                                                        />
-                                                        <datalist id={`stationsList-${index}`}>
-                                                            {allStations.map((stationObj) => (
-                                                                <option key={stationObj.id} value={stationObj.name} />
-                                                            ))}
-                                                        </datalist>
+                    <div className={style.rightPart}>
+                        {isAddVisible && (
+                            <div className={style.addToute}>
+                                <div className={style.firstRowAdd}>
+                                    <h1 className={style.route}>Добавить маршрут</h1>
+                                    <p onClick={toggleAddVisibility}>x</p>
+                                </div>
+                                <div className={style.contentAddRow}>
+                                    <div className={style.partOfContent}>
+                                        {stations.map((station, index) => (
+                                            <div key={index} className={style.chooseLine}>
+                                                <div className={style.param}>
+                                                    <div key={index} className="chooseLine">
+                                                        <div className={style.param}>
+                                                            <h3>Станция</h3>
+                                                            <input 
+                                                                type="text"
+                                                                list={`stationsList-${index}`}
+                                                                placeholder="Введите станцию"
+                                                                value={station.station}
+                                                                onChange={(e) => {
+                                                                    const newStations = [...stations];
+                                                                    newStations[index].station = e.target.value;
+                                                                    setStations(newStations);
+                                                                }}
+                                                            />
+                                                            <datalist id={`stationsList-${index}`}>
+                                                                {allStations.map((stationObj) => (
+                                                                    <option key={stationObj.id} value={stationObj.name} />
+                                                                ))}
+                                                            </datalist>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div className={style.param}>
-                                                <h3>Дата отправления</h3>
-                                                <input 
-                                                    type="datetime-local" 
-                                                    value={station.departureDate}
-                                                    onChange={(e) => {
-                                                        const newStations = [...stations];
-                                                        newStations[index].departureDate = e.target.value;
-                                                        setStations(newStations);
-                                                    }}
+                                                <div className={style.param}>
+                                                    <h3>Дата отправления</h3>
+                                                    <input 
+                                                        type="datetime-local" 
+                                                        value={station.departureDate}
+                                                        onChange={(e) => {
+                                                            const newStations = [...stations];
+                                                            newStations[index].departureDate = e.target.value;
+                                                            setStations(newStations);
+                                                        }}
+                                                    />
+                                                </div>
+                                                <div className={style.param}>
+                                                    <h3>Дата прибытия</h3>
+                                                    <input 
+                                                        type="datetime-local" 
+                                                        value={station.arrivalDate}
+                                                        onChange={(e) => {
+                                                            const newStations = [...stations];
+                                                            newStations[index].arrivalDate = e.target.value;
+                                                            setStations(newStations);
+                                                        }}
+                                                    />
+                                                </div>
+                                                <FaTrash 
+                                                    className={style.deleteIcon} 
+                                                    onClick={() => removeStation(index)} 
+                                                    style={{ cursor: "pointer", color: "black", fontSize: "1.0em" }} 
                                                 />
                                             </div>
-                                            <div className={style.param}>
-                                                <h3>Дата прибытия</h3>
-                                                <input 
-                                                    type="datetime-local" 
-                                                    value={station.arrivalDate}
-                                                    onChange={(e) => {
-                                                        const newStations = [...stations];
-                                                        newStations[index].arrivalDate = e.target.value;
-                                                        setStations(newStations);
-                                                    }}
-                                                />
-                                            </div>
-                                            <FaTrash 
-                                                className={style.deleteIcon} 
-                                                onClick={() => removeStation(index)} 
-                                                style={{ cursor: "pointer", color: "black", fontSize: "1.0em" }} 
-                                            />
-                                        </div>
-                                    ))}
-                                    <button 
-                                        className={style.buttonMainPage}
-                                        onClick={addStation}>
-                                        Добавить следующую станцию
-                                    </button>   
-                                </div>
-                                <div className={style.partOfContent}>
-                                    <div className={style.param}>
-                                        <h3>Поезд</h3>
-                                        <input 
-                                            type="text"
-                                            list="trainsList"
-                                            placeholder="Выберите поезд"
-                                            value={selectedTrain}
-                                            onChange={(e) => {
-                                                const selected = allTrains.find(train => train.train === e.target.value);
-                                                if (selected) setSelectedTrain(selected.id);
-                                            }}
-                                        />
-                                        <datalist id="trainsList">
-                                            {allTrains.map((train) => (
-                                                <option key={train.id} value={train.train} />
-                                            ))}
-                                        </datalist>
+                                        ))}
+                                        <button 
+                                            className={style.buttonMainPage}
+                                            onClick={addStation}>
+                                            Добавить следующую станцию
+                                        </button>   
                                     </div>
-                                    <button className={style.buttonMainPage} onClick={handleSaveRoute}>
-                                        Сохранить маршрут
-                                    </button>
+                                    <div className={style.partOfContent}>
+                                        <div className={style.param}>
+                                            <h3>Поезд</h3>
+                                            <input 
+                                                type="text"
+                                                list="trainsList"
+                                                placeholder="Выберите поезд"
+                                                value={selectedTrain}
+                                                onChange={(e) => {
+                                                    const selected = allTrains.find(train => train.train === e.target.value);
+                                                    if (selected) setSelectedTrain(selected.id);
+                                                }}
+                                            />
+                                            <datalist id="trainsList">
+                                                {allTrains.map((train) => (
+                                                    <option key={train.id} value={train.train} />
+                                                ))}
+                                            </datalist>
+                                        </div>
+                                        <button className={style.buttonMainPage} onClick={handleSaveRoute}>
+                                            Сохранить маршрут
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    )}
+                        )}
+                        {isStationVisible && (
+                            <div className={style.stationForm}>
+                                <p onClick={toggleStationVisibility}>x</p>
+                                <div className={style.stationContent}>
+                                    <div className={style.addStation}>
+                                        <div><h1 className={style.route}>Добавить станцию</h1></div>
+                                        <div className={style.param}>
+                                            <h3>Введите название станции</h3>
+                                            <input 
+                                                type="text" 
+                                                placeholder="Введите станцию"
+                                                value={newStationName}
+                                                onChange={(e) => setNewStationName(e.target.value)}
+                                            />
+                                            <button className={style.buttonMainPage} onClick={handleSaveStation}>
+                                                Сохранить станцию
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className={`${style.tableStation} ${style.tableRoute}`}>
+                                        <thead className={style.theadRoute}>
+                                            <tr className={style.first}>
+                                                <th>ID</th>
+                                                <th>Станция</th>
+                                            </tr>
+                                        </thead>   
+                                        <tbody>
+                                            {allStations.map((station, index) => (
+                                                <tr key={index} style={{ cursor: "pointer" }}>
+                                                    <td>{station.id}</td>
+                                                    <td>{station.name}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

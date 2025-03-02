@@ -7,7 +7,7 @@
 }
 
 .row {
-    display: flex;
+    display: block;
     align-items: center; 
     justify-content: space-between; 
     width: 100%; 
@@ -22,6 +22,8 @@
 .stations {
     font-weight: bold;
     color: #045952;
+    cursor: pointer;
+    margin-bottom: -20px;
 }
 
 .secondPart {
@@ -114,7 +116,11 @@ tbody tr:last-child td {
     padding-right: 25px; 
 }
 
-
+.rightPart{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
 .addToute{
     width: 650px;
     min-height: auto;
@@ -131,7 +137,7 @@ tbody tr:last-child td {
     width: 100%; 
 }
 
-.firstRowAdd h1{
+.route{
     position: fixed;
     font-weight: bold;
     font-size: 23px;
@@ -190,5 +196,51 @@ tbody tr:last-child td {
     font-weight: bold;
     font-size: 13px;
     cursor: pointer;
-    width: 260px;
+    max-width: 235px;
+    width: auto;
+    box-sizing: border-box; 
+}
+
+
+.stationForm{
+    display: flex;
+    flex-direction: column;
+    width: 650px;
+    height: auto;
+    background-color: #F6F6F6;
+    border-radius: 45px;
+    padding: 5px 20px 30px 20px;
+    position: relative;
+}
+
+.stationForm p {
+    margin-left: 590px;
+    margin-top: 5px;
+}
+
+.stationContent{
+    display: flex;
+    gap: 40px;
+    width: auto;
+    height: auto;
+}
+
+.addStation{
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    height: 180px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: -2px 2px 20px 0px rgba(0, 0, 0, 0.12);
+    border-radius: 45px;
+    padding: 20px 25px;
+    gap:40px;
+}
+
+.tableStation{
+    width: 250px;
+}
+
+.tableStation th {
+    width: 200px;
 }
