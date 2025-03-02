@@ -1,0 +1,46 @@
+.trains {
+    flex-grow: 1; 
+    text-align: center; 
+    margin-left: -150px;
+}
+
+.tableTrain{
+    width: 200px;
+}
+
+.rightPart{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.addTrain{
+    width: 650px;
+    min-height: auto;
+    background-color: #F6F6F6;
+    border-radius: 45px;
+    padding-bottom: 30px;
+}
+
+.route{
+    position: fixed;
+    font-weight: bold;
+    font-size: 23px;
+}
+
+.contentAddRow{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.partOfContent{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 10px 30px 0px 22px;
+}
+
+.param input{
+    width: 230px;
+}

@@ -1,0 +1,217 @@
+import { useEffect, useState } from "react";  
+import axios from "axios"; 
+import SideBarAdmin from "../../components/sideBar/sideBar";  
+import style from "./train.module.css";
+import commonStyle from "../styles/forAllPAges.module.css";
+import Add from "../../components/add_plus/add";
+
+const Train = () => {
+    const [isAddVisible, setIsAddVisible] = useState(false);
+    const [trains, setTrains] = useState([]);
+    const [selectedTrain, setSelectedTrain] = useState("");
+    const [isLoading, setIsLoading] = useState(false); 
+    const [error, setError] = useState(null);
+    const [trainName, setTrainName] = useState("");
+    const [numberOfCoaches, setNumberOfCoaches] = useState("");
+    const [seatsPerCoach, setSeatsPerCoach] = useState([]);
+    const [seatPrice, setSeatPrice] = useState("");
+
+    useEffect(() => {
+        fetchTrains();
+    }, []);
+
+    const fetchTrains = async () => {
+        try {
+            const token = localStorage.getItem("accessToken");
+            const response = await axios.get("http://localhost:8080/train/allTrains", {
+                headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+            });
+            setTrains(response.data);
+        } catch (error) {
+            console.error("Ошибка загрузки поездов:", error);
+        }
+    };
+
+    const toggleAddVisibility = () => {
+        setIsAddVisible(!isAddVisible);
+    };
+
+    const handleRowClick = (train) => {
+        setSelectedTrain(train.id);
+        setIsAddVisible(true);
+        
+        setTrainName(train.train);
+        setNumberOfCoaches(train.coachDTOList.length.toString());
+        const seatsArray = train.coachDTOList.map(coach => coach.numberOfSeats.toString());
+        setSeatsPerCoach(seatsArray);
+        if (train.coachDTOList.length > 0 && train.coachDTOList[0].seats.length > 0) {
+            setSeatPrice(train.coachDTOList[0].seats[0].price.toString());
+        } else {
+            setSeatPrice("");
+        }
+    };
+    
+
+    const handleTrainNameChange = (event) => {
+        setTrainName(event.target.value);
+    };
+
+    const handleNumberOfCoachesChange = (event) => {
+        const value = event.target.value;
+        setNumberOfCoaches(value);
+
+        if (value > 0) {
+            setSeatsPerCoach(new Array(parseInt(value)).fill(""));
+        } else {
+            setSeatsPerCoach([]);
+        }
+    };
+
+    const handleSeatsChange = (index, event) => {
+        const newSeats = [...seatsPerCoach];
+        newSeats[index] = event.target.value;
+        setSeatsPerCoach(newSeats);
+    };
+
+    const handleSeatPriceChange = (event) => {
+        setSeatPrice(event.target.value);
+    };
+    
+    const handleSaveTrain = async () => {
+        if (!trainName || numberOfCoaches <= 0 || !seatPrice) {
+            alert("Введите название поезда, количество вагонов и цену за место!");
+            return;
+        }
+    
+        const trainDTO = {
+            train: trainName,
+            coachDTOList: seatsPerCoach.map((seats, index) => ({
+                number: index + 1,
+                numberOfSeats: parseInt(seats) || 0,
+                seats: new Array(parseInt(seats) || 0).fill(null).map((_, seatIndex) => ({
+                    number: seatIndex + 1,
+                    price: parseFloat(seatPrice) || 0 
+                }))
+            }))
+        };
+    
+        try {
+            const token = localStorage.getItem("accessToken");
+            await axios.post("http://localhost:8080/train/addTrain", trainDTO, {
+                headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+            });
+    
+            alert("Поезд успешно добавлен!");
+            fetchTrains();
+            setIsAddVisible(false);
+            setTrainName("");
+            setNumberOfCoaches("");
+            setSeatsPerCoach([]);
+            setSeatPrice("");
+    
+        } catch (error) {
+            console.error("Ошибка при сохранении поезда:", error);
+            alert("Ошибка при сохранении поезда!");
+        }
+    };
+
+    return ( 
+        <div>
+            <SideBarAdmin/>
+            <div className={commonStyle.containerAdmin}>
+                <div className={commonStyle.row}>
+                    <h1 className={style.trains}>Поезда</h1>
+                </div>
+                <div className={commonStyle.secondPart}>
+                    <table className={`${style.tableTrain} ${commonStyle.tableRoute}`}>        
+                        <thead className={commonStyle.theadRoute}>
+                            <tr className={commonStyle.first}>
+                                <th>ID</th>
+                                <th>Поезд</th>
+                            </tr>
+                        </thead>   
+                        <tbody>
+                            {trains.map((train, index) => (
+                                    <tr key={index} onClick={() => handleRowClick(train)}>                                    <td>{train.id}</td>
+                                    <td>{train.train}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    <div className={style.rightPart}>
+                        <div className={style.addTrain}>
+                            <div className={commonStyle.firstRowAdd}>
+                                <h1 className={style.route}>Добавить поезд</h1>
+                                <p onClick={toggleAddVisibility}>x</p>
+                            </div>
+                            <div className={style.contentAddRow}>
+                                <div className={style.partOfContent}>
+                                    <div className={commonStyle.chooseLine}>
+                                        <div className={`${style.param} ${commonStyle.param}`}>
+                                            <h3>Введите название поезда</h3>
+                                            <input 
+                                                type="text"
+                                                placeholder="Введите название поезда"
+                                                value={trainName}
+                                                onChange={handleTrainNameChange}
+                                            />
+                                        </div>
+                                        <div className={`${style.param} ${commonStyle.param}`}>
+                                            <h3>Введите количество вагонов</h3>
+                                            <input 
+                                                type="number"
+                                                placeholder="Введите количество вагонов"
+                                                min="1"
+                                                value={numberOfCoaches}
+                                                onChange={handleNumberOfCoachesChange}
+                                            />
+                                        </div>
+                                        
+                                    </div>
+                                    <div className={commonStyle.param} style={{ gap: "30px" }}>
+                                        {trainName && numberOfCoaches > 0 &&
+                                            seatsPerCoach.map((_, index) => (
+                                                <div key={index} className={`${style.param} ${commonStyle.param}`}>
+                                                    <h3>Количество мест в вагоне {index + 1}</h3>
+                                                    <input 
+                                                        type="number"
+                                                        placeholder="Введите количество мест"
+                                                        min="1"
+                                                        value={seatsPerCoach[index]}
+                                                        onChange={(event) => handleSeatsChange(index, event)}
+                                                    />
+                                                </div>
+                                            ))
+                                        }
+                                        {trainName && numberOfCoaches > 0 && (
+                                            <>
+                                                <div className={`${style.param} ${commonStyle.param}`}>
+                                                    <h3>Введите стоимость места</h3>
+                                                    <input 
+                                                        type="number"
+                                                        placeholder="Введите стоимость места"
+                                                        min="1"
+                                                        value={seatPrice}  
+                                                        onChange={handleSeatPriceChange} 
+                                                    />
+                                                </div>
+                                                <button 
+                                                    className={`${style.buttonMainPage} ${commonStyle.buttonMainPage}`} 
+                                                    onClick={handleSaveTrain}
+                                                >
+                                                    Сохранить поезд
+                                                </button>
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+ 
+export default Train;
