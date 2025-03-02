@@ -4,6 +4,7 @@ import style from "./route.module.css";
 import { useEffect, useState } from "react"; 
 import axios from "axios"; 
 import Add from "../../components/add_plus/add";
+import commonStyle from "../styles/forAllPAges.module.css"
 
 const RoutePage = () => {
     const [routes, setRoutes] = useState([]); 
@@ -173,16 +174,16 @@ const RoutePage = () => {
     return ( 
         <div>
             <SideBarAdmin/>
-            <div className={style.container}>
-                <div className={style.row}>
+            <div className={commonStyle.containerAdmin}>
+                <div className={commonStyle.row}>
                     <p className={style.stations} onClick={toggleStationVisibility}>Станции</p>
                     <h1 className={style.routes}>Маршруты</h1>
                 </div>
-                <div className={style.secondPart}>
+                <div className={commonStyle.secondPart}>
                     <Add onClick={toggleAddVisibility}/>
-                    <table className={style.tableRoute}>        
-                        <thead className={style.theadRoute}>
-                            <tr className={style.first}>
+                    <table className={commonStyle.tableRoute}>        
+                        <thead className={commonStyle.theadRoute}>
+                            <tr>
                                 <th>ID</th>
                                 <th>Маршрут</th>
                                 <th>Поезд</th>
@@ -324,9 +325,9 @@ const RoutePage = () => {
                                             </button>
                                         </div>
                                     </div>
-                                    <div className={`${style.tableStation} ${style.tableRoute}`}>
-                                        <thead className={style.theadRoute}>
-                                            <tr className={style.first}>
+                                    <div className={`${style.tableStation} ${commonStyle.tableRoute}`}>
+                                        <thead className={commonStyle.theadRoute}>
+                                            <tr className={commonStyle.first}>
                                                 <th>ID</th>
                                                 <th>Станция</th>
                                             </tr>
