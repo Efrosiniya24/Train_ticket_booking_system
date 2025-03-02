@@ -31,4 +31,9 @@ public class CoachServiceImpl implements CoachService {
 
         return coachMapper.toCoachDTO(coachEntity);
     }
+
+    @Override
+    public CoachDTO toCoachDTO(CoachEntity coachEntity) {
+        return coachMapper.toCoachDTO(coachEntity);
+    }
 }
