@@ -39,4 +39,9 @@ public class RouteStationTimeServiceImpl implements RouteStationTimeService {
             routeStationTimeRepository.saveAll(routeStationTimes);
         return routeStationTimes;
     }
+
+    @Override
+    public RouteStationTimeEntity findRouteByNameStation(Long routeId, String stationName) {
+        return routeStationTimeRepository.findByIdAndStation_Name(routeId, stationName);
+    }
 }
