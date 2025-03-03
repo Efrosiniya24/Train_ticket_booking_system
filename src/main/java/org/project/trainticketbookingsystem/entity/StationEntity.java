@@ -21,4 +21,10 @@ public class StationEntity {
 
     @OneToMany(mappedBy = "station", cascade = CascadeType.ALL)
     private List<RouteStationTimeEntity> routeStationTime;
+
+    @OneToMany(mappedBy = "departureStation")
+    private List<BookingEntity> departureStationTime;
+
+    @OneToMany(mappedBy = "arrivalStation")
+    private List<BookingEntity> arrivalStationTime;
 }
