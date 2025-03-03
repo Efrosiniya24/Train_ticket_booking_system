@@ -29,4 +29,9 @@ public class SeatServiceImpl implements SeatService {
         seatRepository.saveAll(seatEntities);
         return seatMapper.toSeatDTO(seatEntities);
     }
+
+    @Override
+    public void deleteSeat(List<SeatEntity> seatEntity) {
+        seatRepository.deleteAll(seatEntity);
+    }
 }
