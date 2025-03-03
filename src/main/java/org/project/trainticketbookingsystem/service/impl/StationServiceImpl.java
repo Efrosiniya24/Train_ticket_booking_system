@@ -39,9 +39,12 @@ public class StationServiceImpl implements StationService {
         stationRepository.deleteById(id);
     }
 
-    @Transactional
     @Override
     public StationEntity getStationByName(String stationName) {
+        StationEntity stationEntity = stationRepository.findByName(stationName);
+        if(stationEntity == null)
+            throw new RuntimeException("Station does not exist");
+
         return stationRepository.findByName(stationName);
     }
 
