@@ -17,11 +17,14 @@ public class TrainEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "train")
-    private List<RouteEntity> routes;
-
     private String train;
 
     @OneToMany(mappedBy = "train")
+    private List<RouteEntity> routes;
+
+    @OneToMany(mappedBy = "train")
+    private List<BookingEntity> bookingEntity;
+
+    @OneToMany(mappedBy = "train", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CoachEntity> coachEntities;
 }
