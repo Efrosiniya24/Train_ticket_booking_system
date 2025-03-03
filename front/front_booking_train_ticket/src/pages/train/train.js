@@ -4,6 +4,7 @@ import SideBarAdmin from "../../components/sideBar/sideBar";
 import style from "./train.module.css";
 import commonStyle from "../styles/forAllPAges.module.css";
 import Add from "../../components/add_plus/add";
+import { FaTrash } from "react-icons/fa"; 
 
 const Train = () => {
     const [isAddVisible, setIsAddVisible] = useState(false);
@@ -15,6 +16,7 @@ const Train = () => {
     const [numberOfCoaches, setNumberOfCoaches] = useState("");
     const [seatsPerCoach, setSeatsPerCoach] = useState([]);
     const [seatPrice, setSeatPrice] = useState("");
+    const [hoveredRow, setHoveredRow] = useState(null);
 
     useEffect(() => {
         fetchTrains();
@@ -115,6 +117,25 @@ const Train = () => {
         }
     };
 
+    const handleDeleteTrain = async (trainId) => {
+        if (!window.confirm("Вы уверены, что хотите удалить этот поезд?")) {
+            return;
+        }
+
+        try {
+            const token = localStorage.getItem("accessToken");
+            await axios.delete(`http://localhost:8080/train/delete/${trainId}`, {
+                headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+            });
+
+            setTrains(trains.filter(train => train.id !== trainId));
+        } catch (error) {
+            console.error("Ошибка при удалении поезда:", error);
+            alert("Ошибка при удалении поезда!");
+        }
+    };
+
+
     return ( 
         <div>
             <SideBarAdmin/>
@@ -128,15 +149,39 @@ const Train = () => {
                             <tr className={commonStyle.first}>
                                 <th>ID</th>
                                 <th>Поезд</th>
+                                <th></th>
                             </tr>
                         </thead>   
                         <tbody>
                             {trains.map((train, index) => (
-                                    <tr key={index} onClick={() => handleRowClick(train)}>                                    <td>{train.id}</td>
+                                <tr 
+                                    key={index} 
+                                    onClick={() => handleRowClick(train)}
+                                    onMouseEnter={() => setHoveredRow(train.id)}
+                                    onMouseLeave={() => setHoveredRow(null)}
+                                >                                    
+                                    <td>{train.id}</td>
                                     <td>{train.train}</td>
-                                </tr>
-                            ))}
-                        </tbody>
+                                    <td style={{ position: "relative", textAlign: "center", width: "50px" }}> 
+                                        <span 
+                                            className="delete-icon"
+                                            onClick={(e) => {
+                                                e.stopPropagation(); 
+                                                handleDeleteTrain(train.id);
+                                            }}
+                                            style={{
+                                                cursor: "pointer",
+                                                color: "black",
+                                                fontSize: "14px",
+                                                visibility: hoveredRow === train.id ? "visible" : "hidden" 
+                                            }}
+                                        >
+                                            <FaTrash />
+                                    </span>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
                     </table>
                     <div className={style.rightPart}>
                         <div className={style.addTrain}>
