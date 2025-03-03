@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.project.trainticketbookingsystem.dto.CoachDTO;
 import org.project.trainticketbookingsystem.dto.TrainDTO;
 import org.project.trainticketbookingsystem.entity.TrainEntity;
-import org.project.trainticketbookingsystem.mapper.CoachMapper;
 import org.project.trainticketbookingsystem.mapper.TrainMapper;
 import org.project.trainticketbookingsystem.repository.TrainRepository;
 import org.project.trainticketbookingsystem.service.CoachService;
@@ -43,12 +42,10 @@ public class TrainServiceImpl implements TrainService {
         List<TrainEntity> trainEntities = trainRepository.findAll();
         return trainEntities.stream()
                 .map(trainEntity -> {
-                    return TrainDTO.builder()
-                            .id(trainEntity.getId())
-                            .train(trainEntity.getTrain())
-                            .coachDTOList(trainEntity.getCoachEntities().stream()
-                                    .map(coachService::toCoachDTO).toList())
-                            .build();
+                    TrainDTO trainDTO = trainMapper.toTrainDTO(trainEntity);
+                    trainDTO.setCoachDTOList(trainEntity.getCoachEntities().stream()
+                            .map(coachService::toCoachDTO).toList());
+                    return trainDTO;
                 })
                 .collect(Collectors.toList());
     }
@@ -74,7 +71,10 @@ public class TrainServiceImpl implements TrainService {
 
     @Override
     public void deleteTrainById(Long id) {
-        trainRepository.deleteById(id);
+        TrainEntity train = trainRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Train not found"));
+        coachService.deleteCoach(train.getCoachEntities());
+        trainRepository.delete(train);
     }
 
     private boolean isExistTrain(TrainEntity trainEntity) {
