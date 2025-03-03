@@ -30,7 +30,7 @@ public class StationController {
             StationDTO savedStationDTO = stationService.addStation(stationDTO);
             return ResponseEntity.ok(savedStationDTO);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.FOUND).body(null);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
         }
     }
 

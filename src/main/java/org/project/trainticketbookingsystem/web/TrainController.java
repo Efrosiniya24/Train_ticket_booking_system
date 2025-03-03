@@ -25,7 +25,7 @@ public class TrainController {
               train= trainService.addTrain(trainDTO);
             return ResponseEntity.ok(train);
         }catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.FOUND).body(null);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
         }
     }
 
