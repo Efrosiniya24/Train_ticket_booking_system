@@ -21,11 +21,13 @@ public class TrainServiceImpl implements TrainService {
     private final TrainRepository trainRepository;
     private final TrainMapper trainMapper;
     private final CoachService coachService;
-    private final CoachMapper coachMapper;
 
     @Override
     public TrainDTO addTrain(TrainDTO train) {
         TrainEntity trainEntity = trainMapper.toTrainEntity(train);
+        if (isExistTrain(trainEntity))
+            throw new RuntimeException("Train is already exist");
+
         trainRepository.save(trainEntity);
 
         List<CoachDTO> coachDTOS = train.getCoachDTOList();
@@ -73,5 +75,9 @@ public class TrainServiceImpl implements TrainService {
     @Override
     public void deleteTrainById(Long id) {
         trainRepository.deleteById(id);
+    }
+
+    private boolean isExistTrain(TrainEntity trainEntity) {
+        return trainRepository.existsByTrain(trainEntity.getTrain());
     }
 }

@@ -12,4 +12,5 @@ import java.util.Optional;
 public interface TrainRepository extends JpaRepository<TrainEntity, Long> {
     Optional<TrainEntity> findById(Long id);
     List<TrainEntity> findAll();
+    boolean existsByTrain(String name);
 }
