@@ -25,9 +25,13 @@ public class StationServiceImpl implements StationService {
     }
 
     @Override
-    public void addStation(StationDTO stationDTO) {
+    public StationDTO addStation(StationDTO stationDTO) {
         StationEntity stationEntity = stationMapper.toStationEntity(stationDTO);
+        if(isExistsStation(stationEntity))
+            throw new RuntimeException("Station already exists");
+
         stationRepository.save(stationEntity);
+        return stationMapper.toStationDTO(stationRepository.save(stationEntity));
     }
 
     @Override
@@ -39,5 +43,9 @@ public class StationServiceImpl implements StationService {
     @Override
     public StationEntity getStationByName(String stationName) {
         return stationRepository.findByName(stationName);
+    }
+
+    private boolean isExistsStation(StationEntity stationEntity) {
+        return stationRepository.existsByName(stationEntity.getName());
     }
 }
