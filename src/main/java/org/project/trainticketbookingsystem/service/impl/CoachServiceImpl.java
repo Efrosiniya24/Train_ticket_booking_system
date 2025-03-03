@@ -10,6 +10,8 @@ import org.project.trainticketbookingsystem.service.CoachService;
 import org.project.trainticketbookingsystem.service.SeatService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CoachServiceImpl implements CoachService {
@@ -35,5 +37,14 @@ public class CoachServiceImpl implements CoachService {
     @Override
     public CoachDTO toCoachDTO(CoachEntity coachEntity) {
         return coachMapper.toCoachDTO(coachEntity);
+    }
+
+    @Override
+    public void deleteCoach(List<CoachEntity> coachEntities) {
+        for(CoachEntity coachEntity : coachEntities) {
+            seatService.deleteSeat(coachEntity.getSeats());
+        }
+
+        coachRepository.deleteAll(coachEntities);
     }
 }
