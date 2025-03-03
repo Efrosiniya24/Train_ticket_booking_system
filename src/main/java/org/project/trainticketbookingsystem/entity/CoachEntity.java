@@ -26,6 +26,6 @@ public class CoachEntity {
     @JoinColumn(name = "train_id")
     private TrainEntity train;
 
-    @OneToMany(mappedBy = "coach")
+    @OneToMany(mappedBy = "coach", cascade = CascadeType.ALL)
     private List<SeatEntity> seats;
 }
