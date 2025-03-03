@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class RouteDTO {
+    private Long id;
     private TrainDTO train;
     private List<RouteStationTimeDTO> routeStationTimeDTO;
 }

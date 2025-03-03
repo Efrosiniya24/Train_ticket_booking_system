@@ -123,7 +123,8 @@ public class RouteServiceImpl implements RouteService {
 
     @Override
     public RouteDTO getRouteById(Long id) {
-        RouteEntity routeEntity = routeRepository.findById(id).orElseThrow(() -> new RuntimeException("Route not found"));
+        RouteEntity routeEntity = routeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Route not found"));
         return toRouteDTO(routeEntity);
     }
 
@@ -140,6 +141,7 @@ public class RouteServiceImpl implements RouteService {
         TrainDTO trainDTO = trainService.getTrainById(routeEntity.getTrain().getId());
 
         return RouteDTO.builder()
+                .id (routeEntity.getId())
                 .train(trainDTO)
                 .routeStationTimeDTO(routeStationTimeDTOList)
                 .build();
