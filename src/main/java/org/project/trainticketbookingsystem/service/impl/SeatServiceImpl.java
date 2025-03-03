@@ -1,6 +1,7 @@
 package org.project.trainticketbookingsystem.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.project.trainticketbookingsystem.dto.BookingDTO;
 import org.project.trainticketbookingsystem.dto.SeatDTO;
 import org.project.trainticketbookingsystem.entity.CoachEntity;
 import org.project.trainticketbookingsystem.entity.SeatEntity;
@@ -10,6 +11,7 @@ import org.project.trainticketbookingsystem.service.SeatService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +30,20 @@ public class SeatServiceImpl implements SeatService {
 
         seatRepository.saveAll(seatEntities);
         return seatMapper.toSeatDTO(seatEntities);
+    }
+
+    @Override
+    public List<SeatEntity> getSeatEntityFromBooking(BookingDTO bookingDTO) {
+        return bookingDTO.getSeatsList().stream()
+                .map(currentSeat -> seatRepository.findById(currentSeat.getId()).orElseThrow(() -> new RuntimeException("Seat not found")))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Long> getSeatsId(List<SeatEntity> seatEntities) {
+        return seatEntities.stream()
+                .map(SeatEntity::getId)
+                .collect(Collectors.toList());
     }
 
     @Override
