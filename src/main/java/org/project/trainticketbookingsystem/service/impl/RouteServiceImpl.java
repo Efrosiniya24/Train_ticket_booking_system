@@ -34,7 +34,7 @@ public class RouteServiceImpl implements RouteService {
     @Transactional
     @Override
     public RouteDTO createRoute(RouteDTO routeDTO) {
-        TrainEntity train = trainRepository.findById(routeDTO.getTrain().getId()).orElseThrow(() -> new RuntimeException("Train is not found"));
+        TrainEntity train = trainService.getTrainEntityById(routeDTO.getTrain().getId());
 
         RouteEntity routeEntity = RouteEntity.builder()
                 .train(train)
