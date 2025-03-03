@@ -17,6 +17,8 @@ const RoutePage = () => {
     const [allTrains, setAllTrains] = useState([]); 
     const [selectedTrain, setSelectedTrain] = useState("");
     const [newStationName, setNewStationName] = useState("");
+    const [hoveredRow, setHoveredRow] = useState(null);
+    const [selectedRoute, setSelectedRoute] = useState("");
 
     useEffect(() => {
         const fetchData = async () => {
@@ -131,6 +133,7 @@ const RoutePage = () => {
     
     const handleRowClick = (route) => {
         setSelectedTrain(route.train.id);
+        setIsAddVisible(true);
         setStations(route.routeStationTimeDTO.map((stationTime, index) => ({
             station: stationTime.stationDTO.name,
             departureDate: stationTime.departureDate,
@@ -169,7 +172,23 @@ const RoutePage = () => {
             alert("Ошибка при сохранении станции!");
         }
     };
-    
+    const handleDeleteRoute = async (routeId) => {
+        if (!window.confirm("Вы уверены, что хотите удалить этот маршрут?")) {
+            return;
+        }
+
+        try {
+            const token = localStorage.getItem("accessToken");
+            await axios.delete(`http://localhost:8080/route/delete/${routeId}`, {
+                headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+            });
+
+            setRoutes(routes.filter(route => route.id !== routeId));
+        } catch (error) {
+            console.error("Ошибка при удалении поезда:", error);
+            alert("Ошибка при удалении поезда!");
+        }
+    };
 
     return ( 
         <div>
@@ -189,12 +208,18 @@ const RoutePage = () => {
                                 <th>Поезд</th>
                                 <th>Отправление</th>
                                 <th>Прибытие</th>
+                                <th></th>
                             </tr>
                         </thead>   
                         <tbody>
                             {routes.map((route, index) => (
-                                <tr key={index} onClick={() => handleRowClick(route)} style={{ cursor: "pointer" }}>
-                                    <td>{index + 1}</td>
+                                <tr 
+                                key={route.id} 
+                                onClick={() => handleRowClick(route)}
+                                onMouseEnter={() => setHoveredRow(route.id)}
+                                onMouseLeave={() => setHoveredRow(null)}
+                            >   
+                                    <td>{route.id}</td>
                                     <td>{route.routeStationTimeDTO.map(stationTime => stationTime.stationDTO.name).join(" → ")}</td>
                                     <td>{route.train.train}</td>
                                     <td>
@@ -204,6 +229,23 @@ const RoutePage = () => {
                                     <td>
                                         {route.routeStationTimeDTO[route.routeStationTimeDTO.length - 1] ? 
                                             new Date(route.routeStationTimeDTO[route.routeStationTimeDTO.length - 1].arrivalDate).toLocaleString() : '-'}
+                                    </td>
+                                    <td style={{ position: "relative", textAlign: "center", width: "50px" }}> 
+                                        <span 
+                                            className="delete-icon"
+                                            onClick={(e) => {
+                                                e.stopPropagation(); 
+                                                handleDeleteRoute(route.id);
+                                            }}
+                                            style={{
+                                                cursor: "pointer",
+                                                color: "black",
+                                                fontSize: "14px",
+                                                visibility: hoveredRow === route.id ? "visible" : "hidden" 
+                                            }}
+                                        >
+                                            <FaTrash />
+                                        </span>
                                     </td>
                                 </tr>
                             ))}
