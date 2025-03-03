@@ -10,4 +10,5 @@ import java.util.List;
 public interface TrainMapper {
     List<TrainDTO> toTrainDTO(List<TrainEntity> trainEntity);
     TrainDTO toTrainDTO(TrainEntity trainEntity);
+    TrainEntity toTrainEntity(TrainDTO trainDTO);
 }
