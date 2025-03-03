@@ -3,6 +3,7 @@ package org.project.trainticketbookingsystem.dto;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Data
@@ -17,4 +18,5 @@ public class SegmentDTO {
     private RouteDTO routeDTO;
     private String firstCityRoute;
     private String lastCityRoute;
+    private Duration timeRoad;
 }
