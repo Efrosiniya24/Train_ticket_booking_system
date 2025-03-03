@@ -5,6 +5,7 @@ import org.project.trainticketbookingsystem.dto.RouteDTO;
 import org.project.trainticketbookingsystem.dto.SearchTicketDTO;
 import org.project.trainticketbookingsystem.dto.SegmentDTO;
 import org.project.trainticketbookingsystem.service.RouteService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -41,8 +42,13 @@ public class RouteController {
 
     @GetMapping("/specificRoute/{id}")
     public ResponseEntity<RouteDTO> getRouteById(@PathVariable Long id) {
-        RouteDTO routeDTo = routeService.getRouteById(id);
-        return ResponseEntity.ok(routeDTo);
+        RouteDTO routeDTO;
+        try{
+            routeDTO = routeService.getRouteById(id);
+            return ResponseEntity.ok(routeDTO);
+        }catch (RuntimeException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
