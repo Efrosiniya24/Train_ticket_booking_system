@@ -44,4 +44,11 @@ public class RouteController {
         RouteDTO routeDTo = routeService.getRouteById(id);
         return ResponseEntity.ok(routeDTo);
     }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteRoute(@PathVariable Long id) {
+        routeService.deleteRoute(id);
+        return ResponseEntity.ok().body("Route deleted successfully");
+    }
 }

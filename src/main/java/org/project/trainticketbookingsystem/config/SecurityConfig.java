@@ -37,7 +37,8 @@ public class SecurityConfig {
                                 "/station/add",
                                 "/station/delete/**",
                                 "/train/addTrain",
-                                "/train/delete/**")
+                                "/train/delete/**",
+                                "route/delete/**")
                         .hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.POST,
                                 "/train/booking")

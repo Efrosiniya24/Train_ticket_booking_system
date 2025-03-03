@@ -145,4 +145,8 @@ public class RouteServiceImpl implements RouteService {
                 .build();
     }
 
+    @Override
+    public void deleteRoute(Long id) {
+        routeRepository.deleteById(id);
+    }
 }

@@ -15,4 +15,5 @@ public interface RouteService {
     List<SegmentDTO> getRequirementSegment(List<RouteDTO> routeDTOs, SearchTicketDTO searchTicketDTO);
     RouteDTO getRouteById(Long id);
     RouteDTO toRouteDTO(RouteEntity routeEntity);
+    void deleteRoute(Long id);
 }
