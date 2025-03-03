@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RestController
 @RequestMapping("/train")
 @AllArgsConstructor
@@ -17,14 +18,27 @@ public class TrainController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/addTrain")
-    private ResponseEntity<TrainDTO> addTrain(@RequestBody TrainDTO trainDTO) {
+    public ResponseEntity<TrainDTO> addTrain(@RequestBody TrainDTO trainDTO) {
         TrainDTO train = trainService.addTrain(trainDTO);
         return ResponseEntity.ok(train);
     }
 
     @GetMapping("/allTrains")
-    private ResponseEntity<List<TrainDTO>> getAllTrains() {
+    public ResponseEntity<List<TrainDTO>> getAllTrains() {
         List<TrainDTO> trainDTO = trainService.getAllTrains();
         return ResponseEntity.ok(trainDTO);
     }
+
+    @GetMapping("/numberOfSeats/{id}")
+    public ResponseEntity<Integer> getNumberOfSeats(@PathVariable Long id) {
+        int numberOfSeats = trainService.getNumberOfSeats(id);
+        return ResponseEntity.ok(numberOfSeats);
+    }
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteTrain(@PathVariable Long id) {
+        trainService.deleteTrainById(id);
+        return ResponseEntity.ok().body(null);
+    }
+
 }

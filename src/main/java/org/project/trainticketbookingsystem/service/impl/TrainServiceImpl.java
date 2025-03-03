@@ -69,4 +69,9 @@ public class TrainServiceImpl implements TrainService {
     public TrainEntity getTrainEntityById(Long id) {
         return trainRepository.findById(id).orElseThrow(() -> new RuntimeException("Train not found"));
     }
+
+    @Override
+    public void deleteTrainById(Long id) {
+        trainRepository.deleteById(id);
+    }
 }
