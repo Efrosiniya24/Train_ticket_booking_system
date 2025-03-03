@@ -1,11 +1,9 @@
 package org.project.trainticketbookingsystem.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -14,6 +12,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class BookingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,10 +27,24 @@ public class BookingEntity {
     private List<SeatEntity> seats;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private UserEntity user;
+    @JoinColumn(name = "train_id")
+    private TrainEntity train;
 
     @ManyToOne
-    @JoinColumn(name = "segment_id")
-    private SegmentEntity segment;
+    @JoinColumn(name = "route_id")
+    private RouteEntity route;
+
+    @ManyToOne
+    @JoinColumn(name = "departure_station_id")
+    private StationEntity departureStation;
+
+    @ManyToOne
+    @JoinColumn(name = "arrival_station_id")
+    private StationEntity arrivalStation;
+
+    private LocalDate arrivalDate;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 }
