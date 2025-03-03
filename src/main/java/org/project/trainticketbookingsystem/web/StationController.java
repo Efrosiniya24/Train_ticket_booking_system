@@ -3,6 +3,7 @@ package org.project.trainticketbookingsystem.web;
 import lombok.AllArgsConstructor;
 import org.project.trainticketbookingsystem.dto.StationDTO;
 import org.project.trainticketbookingsystem.service.StationService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +25,13 @@ public class StationController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/add")
-    public ResponseEntity<String> addStation(@RequestBody StationDTO stationDTO) {
-        stationService.addStation(stationDTO);
-        return ResponseEntity.ok("Station is added successfully");
+    public ResponseEntity<StationDTO> addStation(@RequestBody StationDTO stationDTO) {
+        try {
+            StationDTO savedStationDTO = stationService.addStation(stationDTO);
+            return ResponseEntity.ok(savedStationDTO);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.FOUND).body(null);
+        }
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
