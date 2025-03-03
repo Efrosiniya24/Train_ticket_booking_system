@@ -190,6 +190,24 @@ const RoutePage = () => {
         }
     };
 
+    const handleDeleteTrain = async (stationId) => {
+        if (!window.confirm("Вы уверены, что хотите удалить этот поезд?")) {
+            return;
+        }
+
+        try {
+            const token = localStorage.getItem("accessToken");
+            await axios.delete(`http://localhost:8080/station/delete/${stationId}`, {
+                headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+            }); 
+
+            setStations(stations.filter(station => station.id !== stationId));
+        } catch (error) {
+            console.error("Ошибка при удалении поезда:", error);
+            alert("Ошибка при удалении поезда!");
+        }
+    };
+
     return ( 
         <div>
             <SideBarAdmin/>
@@ -372,13 +390,36 @@ const RoutePage = () => {
                                             <tr className={commonStyle.first}>
                                                 <th>ID</th>
                                                 <th>Станция</th>
+                                                <th></th>
                                             </tr>
                                         </thead>   
                                         <tbody>
                                             {allStations.map((station, index) => (
-                                                <tr key={index} style={{ cursor: "pointer" }}>
+                                                <tr 
+                                                key={index} 
+                                                onClick={() => handleRowClick(station)}
+                                                onMouseEnter={() => setHoveredRow(station.id)}
+                                                onMouseLeave={() => setHoveredRow(null)}
+                                                >    
                                                     <td>{station.id}</td>
                                                     <td>{station.name}</td>
+                                                    <td style={{ position: "relative", textAlign: "center", width: "50px" }}> 
+                                                        <span 
+                                                            className="delete-icon"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation(); 
+                                                                handleDeleteTrain(station.id);
+                                                            }}
+                                                            style={{
+                                                                cursor: "pointer",
+                                                                color: "black",
+                                                                fontSize: "14px",
+                                                                visibility: hoveredRow === station.id ? "visible" : "hidden" 
+                                                            }}
+                                                        >
+                                                        <FaTrash />
+                                                        </span>
+                                                    </td>
                                                 </tr>
                                             ))}
                                         </tbody>
