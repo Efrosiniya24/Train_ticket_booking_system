@@ -16,4 +16,5 @@ public interface RouteService {
     RouteDTO getRouteById(Long id);
     RouteDTO toRouteDTO(RouteEntity routeEntity);
     void deleteRoute(Long id);
+    RouteDTO updateRoute(Long id, RouteDTO routeDTO);
 }

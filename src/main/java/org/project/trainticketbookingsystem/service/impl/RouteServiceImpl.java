@@ -151,4 +151,20 @@ public class RouteServiceImpl implements RouteService {
     public void deleteRoute(Long id) {
         routeRepository.deleteById(id);
     }
+
+    @Transactional
+    @Override
+    public RouteDTO updateRoute(Long id, RouteDTO routeDTO) {
+        RouteEntity routeEntity = routeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Route is not found"));
+
+        TrainEntity train = trainService.getTrainEntityById(routeDTO.getTrain().getId());
+        routeEntity.setTrain(train);
+
+        List<RouteStationTimeEntity> updatedStations = stationTimeService.update(routeDTO.getRouteStationTimeDTO(), routeEntity);
+        routeEntity.setRouteStationTime(updatedStations);
+
+        routeRepository.save(routeEntity);
+        return toRouteDTO(routeEntity);
+    }
 }

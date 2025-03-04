@@ -6,7 +6,7 @@ import org.project.trainticketbookingsystem.entity.RouteEntity;
 import org.project.trainticketbookingsystem.entity.RouteStationTimeEntity;
 import org.project.trainticketbookingsystem.entity.StationEntity;
 import org.project.trainticketbookingsystem.mapper.RouteStationTimeMapper;
-import org.project.trainticketbookingsystem.repository.RouteRepository;
+import org.project.trainticketbookingsystem.mapper.StationMapper;
 import org.project.trainticketbookingsystem.repository.RouteStationTimeRepository;
 import org.project.trainticketbookingsystem.service.RouteStationTimeService;
 import org.project.trainticketbookingsystem.service.StationService;
@@ -44,4 +44,23 @@ public class RouteStationTimeServiceImpl implements RouteStationTimeService {
     public RouteStationTimeEntity findRouteByNameStation(Long routeId, String stationName) {
         return routeStationTimeRepository.findByIdAndStation_Name(routeId, stationName);
     }
+
+    @Override
+    public List<RouteStationTimeEntity> update(List<RouteStationTimeDTO> routeStationTimeDTOs, RouteEntity routeEntity) {
+        List<RouteStationTimeEntity> updatedStations = routeStationTimeDTOs.stream()
+                .map(dto -> {
+                    RouteStationTimeEntity entity = routeStationTimeRepository.findById(dto.getId()).orElseThrow(() -> new RuntimeException("not found"));
+                    entity.setStopOrder(dto.getStopOrder());
+                    entity.setDepartureDate(dto.getDepartureDate());
+                    entity.setArrivalDate(dto.getArrivalDate());
+                    entity.setStation(stationService.getStationByName(dto.getStationDTO().getName()));
+                    entity.setRoute(routeEntity);
+                    return entity;
+                })
+                .collect(Collectors.toList());
+
+        return routeStationTimeRepository.saveAll(updatedStations);
+    }
+
+
 }

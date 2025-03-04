@@ -57,4 +57,12 @@ public class RouteController {
         routeService.deleteRoute(id);
         return ResponseEntity.ok().body("Route deleted successfully");
     }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PutMapping("/update/{id}")
+    public ResponseEntity<RouteDTO> updateRoute(@PathVariable Long id, @RequestBody RouteDTO routeDTO) {
+        RouteDTO updatedRoute = routeService.updateRoute(id, routeDTO);
+        return ResponseEntity.ok(updatedRoute);
+    }
+
 }

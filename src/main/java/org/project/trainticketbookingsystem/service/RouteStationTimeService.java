@@ -9,4 +9,5 @@ import java.util.List;
 public interface RouteStationTimeService {
     List<RouteStationTimeEntity> create(List<RouteStationTimeDTO> routeStationTimeDTOS, RouteEntity routeEntity);
     RouteStationTimeEntity findRouteByNameStation(Long routeId, String stationName);
+    List<RouteStationTimeEntity> update(List<RouteStationTimeDTO> routeStationTimeDTO, RouteEntity routeEntity);
 }
