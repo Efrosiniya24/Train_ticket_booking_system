@@ -6,6 +6,7 @@ import SignUp from './pages/authorization/SignUp';
 import RoutePage from './pages/route/route';
 import { AuthProvider } from './components/AuthProvider';
 import Train from './pages/train/train';
+import SearchRoute from './pages/searchRoute/searchRoute';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/signUp" element={<SignUp/>}></Route>
           <Route path="/route" element={<RoutePage/>}></Route>
           <Route path="/train" element={<Train/>}></Route>
+          <Route path="/searchRoute" element={<SearchRoute/>}></Route>
         </Routes>
       </Router>
     </AuthProvider>
