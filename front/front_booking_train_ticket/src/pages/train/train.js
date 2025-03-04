@@ -142,11 +142,14 @@ const Train = () => {
         }
     
         const trainDTO = {
+            id: selectedTrain,
             train: trainName,
             coachDTOList: seatsPerCoach.map((seats, index) => ({
+                id: selectedTrain ? trains.find(t => t.id === selectedTrain)?.coachDTOList[index]?.id || null : null,
                 number: index + 1,
                 numberOfSeats: parseInt(seats) || 0,
                 seats: new Array(parseInt(seats) || 0).fill(null).map((_, seatIndex) => ({
+                    id: selectedTrain ? trains.find(t => t.id === selectedTrain)?.coachDTOList[index]?.seats[seatIndex]?.id || null : null,
                     number: seatIndex + 1,
                     price: parseFloat(seatPrice) || 0 
                 }))
