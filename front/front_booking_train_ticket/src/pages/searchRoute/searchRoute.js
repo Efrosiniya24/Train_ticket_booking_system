@@ -11,6 +11,7 @@ const SearchRoute = () => {
     const [allStations, setAllStations] = useState([]);
     const [isLoading, setIsLoading] = useState(false); 
     const [error, setError] = useState(null);
+    const [searchResults, setSearchResults] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -68,7 +69,11 @@ const SearchRoute = () => {
                     "Content-Type": "application/json",
                 },
             });
-    
+            if (response.data && response.data.length > 0) {
+                setSearchResults(response.data);
+            } else {
+                setSearchResults(null); 
+            }
             console.log("Найденные маршруты:", response.data);
         } catch (error) {
             console.error("Ошибка поиска маршрута:", error);
@@ -140,6 +145,11 @@ const SearchRoute = () => {
                                 </div>
                         </div>
                     ))}
+                    {searchResults && ( 
+                        <div className={style.resultOfSearch}>
+                            
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
