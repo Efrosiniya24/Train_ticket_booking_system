@@ -10,4 +10,5 @@ public interface CoachService {
     CoachDTO createCoach(TrainEntity trainEntity, CoachDTO coachDTO);
     CoachDTO toCoachDTO(CoachEntity coachEntity);
     void deleteCoach(List<CoachEntity> coachEntities);
+    List<CoachEntity> update(List<CoachDTO> coachDTOList);
 }

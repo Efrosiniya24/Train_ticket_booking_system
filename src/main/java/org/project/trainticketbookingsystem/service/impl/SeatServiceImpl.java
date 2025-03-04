@@ -52,12 +52,13 @@ public class SeatServiceImpl implements SeatService {
     }
 
     @Override
-    public List<SeatEntity> updateSeats(List<SeatEntity> seats) {
+    public List<SeatEntity> updateSeats(List<SeatDTO> seats) {
         List<SeatEntity> seatEntities = seats.stream()
-                .peek(seatEntity-> {
-                        SeatEntity seatEntity1 = seatRepository.findById(seatEntity.getId()).orElseThrow(() -> new RuntimeException("Seat not found"));
-                        seatEntity1.setPrice(seatEntity.getPrice());
-                        seatEntity1.setCoach(seatEntity.getCoach());
+                .map(seatDTO -> {
+                    SeatEntity seatEntity = seatRepository.findById(seatDTO.getId()).orElseThrow(() -> new RuntimeException("Seat not found"));
+                    seatEntity.setPrice(seatDTO.getPrice());
+                    seatEntity.setId(seatDTO.getId());
+                    return seatEntity;
                 })
                 .collect(Collectors.toList());
 

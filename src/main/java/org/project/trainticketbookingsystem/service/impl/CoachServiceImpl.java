@@ -11,6 +11,7 @@ import org.project.trainticketbookingsystem.service.SeatService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -46,5 +47,22 @@ public class CoachServiceImpl implements CoachService {
         }
 
         coachRepository.deleteAll(coachEntities);
+    }
+
+    @Override
+    public List<CoachEntity> update(List<CoachDTO> coachDTOList) {
+        List<CoachEntity> coachEntities = coachDTOList.stream()
+                .map(coachDTO -> {
+                    CoachEntity coachEntity = coachRepository.findById(coachDTO.getId()).orElseThrow(() -> new RuntimeException("Coach not found"));
+                    coachEntity.setId(coachDTO.getId());
+                    coachEntity.setNumber(coachDTO.getNumber());
+                    coachEntity.setNumberOfSeats(coachDTO.getNumberOfSeats());
+                    coachEntity.setSeats(seatService.updateSeats(coachDTO.getSeats()));
+                    return coachEntity;
+                })
+                .collect(Collectors.toList());
+
+        coachRepository.saveAll(coachEntities);
+        return coachEntities;
     }
 }
