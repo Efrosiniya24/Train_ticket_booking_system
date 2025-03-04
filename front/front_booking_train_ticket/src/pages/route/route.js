@@ -18,7 +18,10 @@ const RoutePage = () => {
     const [selectedTrain, setSelectedTrain] = useState("");
     const [newStationName, setNewStationName] = useState("");
     const [hoveredRow, setHoveredRow] = useState(null);
-    const [selectedRoute, setSelectedRoute] = useState("");
+    // const [selectedRoute, setSelectedRoute] = useState("");
+    const [selectedRouteId, setSelectedRouteId] = useState(null);
+    const [selectedRoute, setSelectedRoute] = useState(null);
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -130,17 +133,6 @@ const RoutePage = () => {
             alert("Ошибка при сохранении маршрута!");
         }
     };
-    
-    const handleRowClick = (route) => {
-        setSelectedTrain(route.train.id);
-        setIsAddVisible(true);
-        setStations(route.routeStationTimeDTO.map((stationTime, index) => ({
-            station: stationTime.stationDTO.name,
-            departureDate: stationTime.departureDate,
-            arrivalDate: stationTime.arrivalDate,
-        })));
-        setIsAddVisible(true); 
-    };
 
     const handleSaveStation = async () => {
         if (!newStationName.trim()) {
@@ -207,6 +199,91 @@ const RoutePage = () => {
             alert("Ошибка при удалении поезда!");
         }
     };
+
+    const handleUpdateRoute = async () => {
+        if (!selectedTrain || stations.length < 2) {
+            alert("Выберите поезд и укажите хотя бы две станции!");
+            return;
+        }
+    
+        const token = localStorage.getItem("accessToken");
+    
+        const updatedRouteDTO = {
+            id: selectedRoute.id,
+            train: {
+                id: selectedTrain.id,
+                train: selectedTrain.train
+            },
+            routeStationTimeDTO: stations.map((station, index) => ({
+                id: selectedRoute.routeStationTimeDTO[index]?.id || null, 
+                stopOrder: index + 1,
+                departureDate: station.departureDate,
+                arrivalDate: station.arrivalDate,
+                stationDTO: {
+                    id: allStations.find(s => s.name === station.station)?.id || null, 
+                    name: station.station
+                }
+            }))
+        };
+        
+    
+        try {
+            const response = await axios.put(
+                `http://localhost:8080/route/update/${selectedRoute.id}`, 
+                updatedRouteDTO, 
+                {
+                    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" }
+                }
+            );
+    
+            alert("Маршрут успешно обновлён!");
+
+            setRoutes(routes.map(route => 
+                route.id === selectedRoute.id 
+                    ? { ...response.data, routeStationTimeDTO: response.data.routeStationTimeDTO }
+                    : route
+            ));
+
+            setSelectedRoute(response.data);
+
+            setStations(response.data.routeStationTimeDTO.map(stationTime => ({
+                id: stationTime.id, 
+                station: stationTime.stationDTO.name,
+                departureDate: stationTime.departureDate,
+                arrivalDate: stationTime.arrivalDate
+            })));
+
+            setSelectedTrain({
+                id: response.data.train.id,
+                train: response.data.train.train
+            });
+    
+            setIsAddVisible(false); 
+            setStations([{ station: "", departureDate: "", arrivalDate: "" }]); 
+            setSelectedTrain(""); 
+            setSelectedRoute(null);
+    
+        } catch (error) {
+            console.error("Ошибка при обновлении маршрута:", error);
+            alert("Ошибка при обновлении маршрута!");
+        }
+    };
+    
+    
+    const handleRowClick = (route) => {
+        setSelectedRouteId(route.id);
+        setSelectedTrain(route.train.id);
+        setIsAddVisible(true);
+        setStations(route.routeStationTimeDTO.map(stationTime => ({
+            id: stationTime.id, 
+            station: stationTime.stationDTO.name,
+            departureDate: stationTime.departureDate,
+            arrivalDate: stationTime.arrivalDate
+        })));
+        
+        setSelectedRoute(route); 
+    };
+    
 
     return ( 
         <div>
@@ -359,8 +436,11 @@ const RoutePage = () => {
                                                 ))}
                                             </datalist>
                                         </div>
-                                        <button className={commonStyle.buttonMainPage} onClick={handleSaveRoute}>
-                                            Сохранить маршрут
+                                        <button 
+                                            className={commonStyle.buttonMainPage} 
+                                            onClick={selectedRoute ? handleUpdateRoute : handleSaveRoute}
+                                        >
+                                            {selectedRoute ? "Обновить маршрут" : "Сохранить маршрут"}
                                         </button>
                                     </div>
                                 </div>
