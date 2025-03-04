@@ -52,4 +52,11 @@ public class TrainController {
         trainService.deleteTrainById(id);
         return ResponseEntity.ok().body(null);
     }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PutMapping("/update/{id}")
+    public ResponseEntity<TrainDTO> updateTrain(@PathVariable Long id, @RequestBody TrainDTO trainDTO) {
+        TrainDTO updatedTrain = trainService.updateTrain(id,trainDTO);
+        return ResponseEntity.ok(updatedTrain);
+    }
 }

@@ -12,4 +12,5 @@ public interface TrainService {
     int getNumberOfSeats(Long trainId);
     TrainEntity getTrainEntityById(Long id);
     void deleteTrainById(Long id);
+    TrainDTO updateTrain(Long id, TrainDTO trainDTO);
 }

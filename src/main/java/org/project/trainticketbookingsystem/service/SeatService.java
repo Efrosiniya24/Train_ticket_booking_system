@@ -12,4 +12,5 @@ public interface SeatService {
     List<SeatEntity> getSeatEntityFromBooking(BookingDTO bookingDTO);
     List<Long> getSeatsId(List<SeatEntity> seatEntities);
     void deleteSeat(List<SeatEntity> seatEntity);
+    List<SeatEntity> updateSeats(List<SeatEntity> seats);
 }

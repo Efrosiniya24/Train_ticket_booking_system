@@ -50,4 +50,17 @@ public class SeatServiceImpl implements SeatService {
     public void deleteSeat(List<SeatEntity> seatEntity) {
         seatRepository.deleteAll(seatEntity);
     }
+
+    @Override
+    public List<SeatEntity> updateSeats(List<SeatEntity> seats) {
+        List<SeatEntity> seatEntities = seats.stream()
+                .peek(seatEntity-> {
+                        SeatEntity seatEntity1 = seatRepository.findById(seatEntity.getId()).orElseThrow(() -> new RuntimeException("Seat not found"));
+                        seatEntity1.setPrice(seatEntity.getPrice());
+                        seatEntity1.setCoach(seatEntity.getCoach());
+                })
+                .collect(Collectors.toList());
+
+        return seatRepository.saveAll(seatEntities);
+    }
 }
