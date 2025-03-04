@@ -126,7 +126,7 @@ const Train = () => {
             const token = localStorage.getItem("accessToken");
             await axios.delete(`http://localhost:8080/train/delete/${trainId}`, {
                 headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-            });
+            }); 
 
             setTrains(trains.filter(train => train.id !== trainId));
         } catch (error) {
@@ -135,6 +135,53 @@ const Train = () => {
         }
     };
 
+    const handleUpdateTrain = async () => {
+        if (!trainName || numberOfCoaches <= 0 || !seatPrice) {
+            alert("Введите название поезда, количество вагонов и цену за место!");
+            return;
+        }
+    
+        const trainDTO = {
+            train: trainName,
+            coachDTOList: seatsPerCoach.map((seats, index) => ({
+                number: index + 1,
+                numberOfSeats: parseInt(seats) || 0,
+                seats: new Array(parseInt(seats) || 0).fill(null).map((_, seatIndex) => ({
+                    number: seatIndex + 1,
+                    price: parseFloat(seatPrice) || 0 
+                }))
+            }))
+        };
+    
+        try {
+            const token = localStorage.getItem("accessToken");
+            await axios.put(`http://localhost:8080/train/update/${selectedTrain}`, trainDTO, {
+                headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+            });
+    
+            alert("Поезд успешно обновлен!");
+            fetchTrains();
+            setIsAddVisible(false);
+            setSelectedTrain("");
+            setTrainName("");
+            setNumberOfCoaches("");
+            setSeatsPerCoach([]);
+            setSeatPrice("");
+    
+        } catch (error) {
+            console.error("Ошибка при обновлении поезда:", error);
+            alert("Ошибка при обновлении поезда!");
+        }
+    }; 
+
+    const handleSaveOrUpdateTrain = () => {
+        if (selectedTrain) {
+            handleUpdateTrain();
+        } else {
+            handleSaveTrain();
+        }
+    };
+    
 
     return ( 
         <div>
@@ -242,9 +289,9 @@ const Train = () => {
                                                 </div>
                                                 <button 
                                                     className={`${style.buttonMainPage} ${commonStyle.buttonMainPage}`} 
-                                                    onClick={handleSaveTrain}
+                                                    onClick={handleSaveOrUpdateTrain}
                                                 >
-                                                    Сохранить поезд
+                                                    {selectedTrain ? "Обновить поезд" : "Сохранить поезд"}
                                                 </button>
                                             </>
                                         )}
