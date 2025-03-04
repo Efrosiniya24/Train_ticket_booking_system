@@ -200,6 +200,8 @@ const RoutePage = () => {
         }
     };
 
+    const selectedTrainObj = allTrains.find(train => train.id === selectedTrain);
+
     const handleUpdateRoute = async () => {
         if (!selectedTrain || stations.length < 2) {
             alert("Выберите поезд и укажите хотя бы две станции!");
@@ -211,8 +213,8 @@ const RoutePage = () => {
         const updatedRouteDTO = {
             id: selectedRoute.id,
             train: {
-                id: selectedTrain.id,
-                train: selectedTrain.train
+                id: selectedTrain,
+                train: selectedTrainObj ? selectedTrainObj.train : ""
             },
             routeStationTimeDTO: stations.map((station, index) => ({
                 id: selectedRoute.routeStationTimeDTO[index]?.id || null, 
