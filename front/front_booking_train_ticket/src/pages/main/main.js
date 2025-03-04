@@ -1,13 +1,14 @@
 import Header from "../../components/headerMain/headerMain";
+import userStyle from "../styles/userStyle.module.css";
 import style from "./main.module.css";
 import photo from "./train.png";
 import { NavLink } from "react-router-dom"
 
 const Main = () => {
     return (  
-        <div className={style.mainPage}>
+        <div className={userStyle.page}>
             <Header/>
-            <div className={style.container}>
+            <div className={userStyle.container}>
                 <div className={style.box}>
                     <div className={style.rightPart}>
                         <div className={style.text}>
@@ -16,9 +17,11 @@ const Main = () => {
                             <p>system</p>
                         </div>
                         <div className={style.buttons}>
-                            <button className={style.buttonMainPage}>
-                                Найти билет
-                            </button>
+                            <NavLink to="/searchRoute">
+                                <button className={style.buttonMainPage}>
+                                    Найти билет
+                                </button>
+                            </NavLink>
                             <NavLink to="/signIn">
                                 <button className={style.buttonMainPage}>
                                     Войти
