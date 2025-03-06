@@ -1,10 +1,11 @@
 package org.project.trainticketbookingsystem.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.project.trainticketbookingsystem.dto.BookingDTO;
-import org.project.trainticketbookingsystem.dto.SeatDTO;
+import org.project.trainticketbookingsystem.dto.BookingDto;
+import org.project.trainticketbookingsystem.dto.SeatDto;
 import org.project.trainticketbookingsystem.entity.CoachEntity;
 import org.project.trainticketbookingsystem.entity.SeatEntity;
+import org.project.trainticketbookingsystem.exceptions.SeatException;
 import org.project.trainticketbookingsystem.mapper.SeatMapper;
 import org.project.trainticketbookingsystem.repository.SeatRepository;
 import org.project.trainticketbookingsystem.service.SeatService;
@@ -20,8 +21,8 @@ public class SeatServiceImpl implements SeatService {
     private final SeatMapper seatMapper;
 
     @Override
-    public List<SeatDTO> createSeat(CoachEntity coachEntity, List<SeatDTO> seatDTOs) {
-        List<SeatEntity> seatEntities = seatDTOs.stream()
+    public List<SeatDto> createSeat(CoachEntity coachEntity, List<SeatDto> seatDtos) {
+        List<SeatEntity> seatEntities = seatDtos.stream()
                 .map(seatDTO -> SeatEntity.builder()
                         .price(seatDTO.getPrice())
                         .coach(coachEntity)
@@ -33,9 +34,9 @@ public class SeatServiceImpl implements SeatService {
     }
 
     @Override
-    public List<SeatEntity> getSeatEntityFromBooking(BookingDTO bookingDTO) {
+    public List<SeatEntity> getSeatEntityFromBooking(BookingDto bookingDTO) {
         return bookingDTO.getSeatsList().stream()
-                .map(currentSeat -> seatRepository.findById(currentSeat.getId()).orElseThrow(() -> new RuntimeException("Seat not found")))
+                .map(currentSeat -> seatRepository.findById(currentSeat.getId()).orElseThrow(() -> new SeatException("Seat not found")))
                 .collect(Collectors.toList());
     }
 
@@ -52,10 +53,10 @@ public class SeatServiceImpl implements SeatService {
     }
 
     @Override
-    public List<SeatEntity> updateSeats(List<SeatDTO> seats) {
+    public List<SeatEntity> updateSeats(List<SeatDto> seats) {
         List<SeatEntity> seatEntities = seats.stream()
                 .map(seatDTO -> {
-                    SeatEntity seatEntity = seatRepository.findById(seatDTO.getId()).orElseThrow(() -> new RuntimeException("Seat not found"));
+                    SeatEntity seatEntity = seatRepository.findById(seatDTO.getId()).orElseThrow(() -> new SeatException("Seat not found"));
                     seatEntity.setPrice(seatDTO.getPrice());
                     seatEntity.setId(seatDTO.getId());
                     return seatEntity;
@@ -63,5 +64,10 @@ public class SeatServiceImpl implements SeatService {
                 .collect(Collectors.toList());
 
         return seatRepository.saveAll(seatEntities);
+    }
+
+    @Override
+    public double getPrice(Long trainId) {
+        return seatRepository.findSinglePriceByTrainId(trainId);
     }
 }
