@@ -1,32 +1,35 @@
 package org.project.trainticketbookingsystem.web;
 
-import lombok.AllArgsConstructor;
-import org.project.trainticketbookingsystem.dto.ResponseDTO;
-import org.project.trainticketbookingsystem.dto.SignInRequestDTO;
-import org.project.trainticketbookingsystem.dto.SignUpRequestDTO;
+import lombok.RequiredArgsConstructor;
+import org.project.trainticketbookingsystem.dto.ResponseDto;
+import org.project.trainticketbookingsystem.dto.SignInRequestDto;
+import org.project.trainticketbookingsystem.dto.SignUpRequestDto;
 import org.project.trainticketbookingsystem.service.AuthenticationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RestController
 @RequestMapping("/train/auth")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
 
     @PostMapping("/signUp")
-    ResponseEntity<ResponseDTO> signUp(@RequestBody SignUpRequestDTO requestDTO) {
+    ResponseEntity<ResponseDto> signUp(@RequestBody SignUpRequestDto requestDTO) {
         return ResponseEntity.ok(authenticationService.signUp(requestDTO));
     }
 
     @PostMapping("/signIn")
-    ResponseEntity<ResponseDTO> signIn(@RequestBody SignInRequestDTO requestDTO) {
+    ResponseEntity<ResponseDto> signIn(@RequestBody SignInRequestDto requestDTO) {
         try {
             return ResponseEntity.ok(authenticationService.signIn(requestDTO));
         } catch (UsernameNotFoundException e) {

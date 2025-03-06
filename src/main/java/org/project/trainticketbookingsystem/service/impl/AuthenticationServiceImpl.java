@@ -1,10 +1,11 @@
 package org.project.trainticketbookingsystem.service.impl;
 
 import io.jsonwebtoken.Claims;
+import java.util.Date;
 import lombok.RequiredArgsConstructor;
-import org.project.trainticketbookingsystem.dto.ResponseDTO;
-import org.project.trainticketbookingsystem.dto.SignInRequestDTO;
-import org.project.trainticketbookingsystem.dto.SignUpRequestDTO;
+import org.project.trainticketbookingsystem.dto.ResponseDto;
+import org.project.trainticketbookingsystem.dto.SignInRequestDto;
+import org.project.trainticketbookingsystem.dto.SignUpRequestDto;
 import org.project.trainticketbookingsystem.entity.UserEntity;
 import org.project.trainticketbookingsystem.repository.UserRepository;
 import org.project.trainticketbookingsystem.service.AuthenticationService;
@@ -14,8 +15,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +26,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     @Override
-    public ResponseDTO signUp(SignUpRequestDTO requestDTO) {
+    public ResponseDto signUp(SignUpRequestDto requestDTO) {
         UserEntity user = UserEntity
                 .builder()
                 .name(requestDTO.getName())
@@ -41,13 +40,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         String token = jwtService.generateAccessToken(user);
 
-        return ResponseDTO.builder()
+        return ResponseDto.builder()
                 .accessToken(token)
                 .build();
     }
 
     @Override
-    public ResponseDTO signIn(SignInRequestDTO requestDTO) {
+    public ResponseDto signIn(SignInRequestDto requestDTO) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         requestDTO.getEmail(),
@@ -59,7 +58,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         String token = jwtService.generateAccessToken(user);
 
-        return ResponseDTO.builder()
+        return ResponseDto.builder()
                 .accessToken(token)
                 .userId(user.getId())
                 .role(user.getRole().name())
