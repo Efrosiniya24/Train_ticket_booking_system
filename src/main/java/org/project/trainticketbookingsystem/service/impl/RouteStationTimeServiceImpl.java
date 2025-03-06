@@ -35,8 +35,8 @@ public class RouteStationTimeServiceImpl implements RouteStationTimeService {
     }
 
     @Override
-    public RouteStationTimeEntity findRouteByNameStation(Long routeId, String stationName) {
-        return routeStationTimeRepository.findByIdAndStation_Name(routeId, stationName);
+    public RouteStationTimeEntity findByRouteIdAndStationId(Long routeId, Long stationID) {
+        return routeStationTimeRepository.findByStationIdAndRouteId(stationID, routeId);
     }
 
     @Override
