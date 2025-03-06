@@ -20,49 +20,49 @@ public class ExceptionHandlerController {
 
     @ExceptionHandler(TrainException.class)
     public ResponseEntity<Object> handlerTrainException(TrainException e) {
-        log.info(e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        log.error(e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
     @ExceptionHandler(UserException.class)
     public ResponseEntity<Object> handlerUserException(UserException e) {
-        log.info(e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        log.error(e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
     @ExceptionHandler(StationException.class)
     public ResponseEntity<Object> handlerStationException(StationException e) {
-        log.info(e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        log.error(e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
     @ExceptionHandler(SeatException.class)
     public ResponseEntity<Object> handlerSeatException(SeatException e) {
-        log.info(e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        log.error(e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
     @ExceptionHandler(RouteStationTimeException.class)
     public ResponseEntity<Object> handlerRouteStationTimeException(RouteStationTimeException e) {
-        log.info(e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        log.error(e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
     @ExceptionHandler(RouteException.class)
     public ResponseEntity<Object> handlerRouteException(RouteException e) {
-        log.info(e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        log.error(e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
     @ExceptionHandler(CoachException.class)
     public ResponseEntity<Object> handlerCoachException(CoachException e) {
-        log.info(e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        log.error(e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
     @ExceptionHandler(BookingException.class)
     public ResponseEntity<Object> handlerBookingException(BookingException e) {
-        log.info(e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        log.error(e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 }
