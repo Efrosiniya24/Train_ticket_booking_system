@@ -8,7 +8,7 @@ import org.project.trainticketbookingsystem.entity.RouteStationTimeEntity;
 public interface RouteStationTimeService {
     List<RouteStationTimeEntity> create(List<RouteStationTimeDto> routeStationTimeDtos, RouteEntity routeEntity);
 
-    RouteStationTimeEntity findByRouteIdAndStationId(Long routeId, Long stationId);
-
     List<RouteStationTimeEntity> update(List<RouteStationTimeDto> routeStationTimeDTO, RouteEntity routeEntity);
+
+    List<RouteStationTimeEntity> findByRouteIdAndStationId(Long routeId, Long departureStationId, Long arrivalStationId);
 }
