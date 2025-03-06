@@ -2,7 +2,7 @@ package org.project.trainticketbookingsystem.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.project.trainticketbookingsystem.Enum.Role;
+import org.project.trainticketbookingsystem.enums.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
