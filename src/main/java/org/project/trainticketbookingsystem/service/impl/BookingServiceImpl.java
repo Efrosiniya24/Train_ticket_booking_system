@@ -2,6 +2,7 @@ package org.project.trainticketbookingsystem.service.impl;
 
 import jakarta.annotation.PostConstruct;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,12 +36,6 @@ public class BookingServiceImpl implements BookingService {
     private final BookingMapper bookingMapper;
     private final UserService userService;
 
-    @PostConstruct
-    public void checkBean() {
-        log.info("BookingServiceImpl создан: {}", this);
-    }
-
-    @Transactional
     @Override
     public BookingDto bookTicket(BookingDto bookingDTO, UserDetails user) {
         //расширить user details с id
@@ -100,12 +95,16 @@ public class BookingServiceImpl implements BookingService {
                 .filter(booking -> booking.getSeats().
                         stream().anyMatch(seat -> seatIds.contains(seat.getId())))
                 .anyMatch(booking -> {
-                    int bookedDepartureOrder = routeStationTimeService
-                            .findByRouteIdAndStationId(routeID, booking.getDepartureStation().getId())
-                            .getStopOrder();
-                    int bookedArrivalOrder = routeStationTimeService
-                            .findByRouteIdAndStationId(routeID, booking.getArrivalStation().getId())
-                            .getStopOrder();
+                    List<RouteStationTimeEntity> bookedStations = routeStationTimeService.findByRouteIdAndStationId(
+                            routeID, booking.getDepartureStation().getId(), booking.getArrivalStation().getId()
+                    );
+
+                    if (bookedStations.size() < 2) {
+                        return false;
+                    }
+
+                    int bookedDepartureOrder = bookedStations.get(0).getStopOrder();
+                    int bookedArrivalOrder = bookedStations.get(1).getStopOrder();
 
                     return (departureStopOrder >= bookedDepartureOrder && departureStopOrder < bookedArrivalOrder) ||
                             (arrivalStopOrder > bookedDepartureOrder && arrivalStopOrder <= bookedArrivalOrder);
