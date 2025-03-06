@@ -1,18 +1,23 @@
 package org.project.trainticketbookingsystem.web;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.project.trainticketbookingsystem.dto.RouteDTO;
-import org.project.trainticketbookingsystem.dto.SearchTicketDTO;
-import org.project.trainticketbookingsystem.dto.SegmentDTO;
+import org.project.trainticketbookingsystem.dto.RouteDto;
+import org.project.trainticketbookingsystem.dto.SearchTicketDto;
+import org.project.trainticketbookingsystem.dto.SegmentDto;
 import org.project.trainticketbookingsystem.service.RouteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RestController
 @RequestMapping("/route")
 @RequiredArgsConstructor
@@ -22,31 +27,31 @@ public class RouteController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/create")
-    public ResponseEntity<RouteDTO> createRoute(@RequestBody RouteDTO routeDTO) {
-        RouteDTO createdRoutDTO = routeService.createRoute(routeDTO);
-        return ResponseEntity.ok().body(createdRoutDTO);
+    public ResponseEntity<RouteDto> createRoute(@RequestBody RouteDto routeDto) {
+        RouteDto createdRoutDto = routeService.createRoute(routeDto);
+        return ResponseEntity.ok().body(createdRoutDto);
     }
 
     @GetMapping("/allRoutes")
-    public ResponseEntity<List<RouteDTO>> getAllRoutes() {
-        List<RouteDTO> routes = routeService.getAllRoutes();
+    public ResponseEntity<List<RouteDto>> getAllRoutes() {
+        List<RouteDto> routes = routeService.getAllRoutes();
         return ResponseEntity.ok(routes);
     }
 
     @PostMapping("/searchRoutes")
-    public ResponseEntity<List<SegmentDTO>> searchRoute(@RequestBody SearchTicketDTO searchTicketDTO) {
-        List<RouteDTO> routeDTOs = routeService.searchRoutes(searchTicketDTO);
-        List<SegmentDTO> segmentDTOs = routeService.getRequirementSegment(routeDTOs, searchTicketDTO);
-        return ResponseEntity.ok(segmentDTOs);
+    public ResponseEntity<List<SegmentDto>> searchRoute(@RequestBody SearchTicketDto searchTicketDto) {
+        List<RouteDto> routeDtos = routeService.searchRoutes(searchTicketDto);
+        List<SegmentDto> segmentDtos = routeService.getRequirementSegment(routeDtos, searchTicketDto);
+        return ResponseEntity.ok(segmentDtos);
     }
 
     @GetMapping("/specificRoute/{id}")
-    public ResponseEntity<RouteDTO> getRouteById(@PathVariable Long id) {
-        RouteDTO routeDTO;
-        try{
-            routeDTO = routeService.getRouteById(id);
-            return ResponseEntity.ok(routeDTO);
-        }catch (RuntimeException e){
+    public ResponseEntity<RouteDto> getRouteById(@PathVariable Long id) {
+        RouteDto routeDto;
+        try {
+            routeDto = routeService.getRouteById(id);
+            return ResponseEntity.ok(routeDto);
+        } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
@@ -60,8 +65,8 @@ public class RouteController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/update/{id}")
-    public ResponseEntity<RouteDTO> updateRoute(@PathVariable Long id, @RequestBody RouteDTO routeDTO) {
-        RouteDTO updatedRoute = routeService.updateRoute(id, routeDTO);
+    public ResponseEntity<RouteDto> updateRoute(@PathVariable Long id, @RequestBody RouteDto routeDto) {
+        RouteDto updatedRoute = routeService.updateRoute(id, routeDto);
         return ResponseEntity.ok(updatedRoute);
     }
 
