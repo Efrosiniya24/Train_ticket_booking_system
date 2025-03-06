@@ -4,7 +4,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.project.trainticketbookingsystem.dto.TrainDto;
 import org.project.trainticketbookingsystem.service.TrainService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,13 +24,8 @@ public class TrainController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/addTrain")
     public ResponseEntity<TrainDto> addTrain(@RequestBody TrainDto trainDTO) {
-        TrainDto train;
-        try {
-            train = trainService.addTrain(trainDTO);
-            return ResponseEntity.ok(train);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
-        }
+        TrainDto train = trainService.addTrain(trainDTO);
+        return ResponseEntity.ok(train);
     }
 
     @GetMapping("/allTrains")
@@ -43,12 +37,9 @@ public class TrainController {
     @GetMapping("/numberOfSeats/{id}")
     public ResponseEntity<Integer> getNumberOfSeats(@PathVariable Long id) {
         int numberOfSeats;
-        try {
-            numberOfSeats = trainService.getNumberOfSeats(id);
-            return ResponseEntity.ok(numberOfSeats);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+        numberOfSeats = trainService.getNumberOfSeats(id);
+        return ResponseEntity.ok(numberOfSeats);
+
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")

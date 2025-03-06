@@ -1,40 +1,38 @@
 package org.project.trainticketbookingsystem.web;
 
-import lombok.AllArgsConstructor;
-import org.project.trainticketbookingsystem.dto.BookingDTO;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.project.trainticketbookingsystem.dto.BookingDto;
 import org.project.trainticketbookingsystem.service.BookingService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@Slf4j
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/train")
 public class BookingController {
 
     private final BookingService bookingService;
 
-    @PreAuthorize("hasAuthority('USER')")
+//    @PreAuthorize("hasAuthority('USER')")
     @PostMapping("/booking")
-    private ResponseEntity<BookingDTO> bookingTicket(@RequestBody BookingDTO bookingDTO, @AuthenticationPrincipal UserDetails userDetails) {
+    private ResponseEntity<BookingDto> bookingTicket(@RequestBody BookingDto bookingDTO, @AuthenticationPrincipal UserDetails userDetails) {
 
-        System.out.println("Received booking request: {}" + bookingDTO);
-
-        if (bookingService == null) {
-            System.out.println("BookingService is null in BookingController!");
-            throw new IllegalStateException("BookingService is not injected properly!");
-        }
+        log.info("Received booking request: {}", bookingDTO);
 
         if (userDetails == null) {
-            System.out.println("UserDetails is null!");
+           log.info("UserDetails is null!");
             throw new IllegalStateException("UserDetails is missing!");
         }
 
-        System.out.println("Authenticated user: {}" + userDetails.getUsername());
-        BookingDTO newBookingDTO = bookingService.bookTicket(bookingDTO, userDetails);
-        return ResponseEntity.ok(newBookingDTO);
+        log.info("Authenticated user: {}", userDetails.getUsername());
+        BookingDto newBookingDto = bookingService.bookTicket(bookingDTO, userDetails);
+        return ResponseEntity.ok(newBookingDto);
     }
 }

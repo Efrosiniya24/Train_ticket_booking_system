@@ -6,7 +6,6 @@ import org.project.trainticketbookingsystem.dto.RouteDto;
 import org.project.trainticketbookingsystem.dto.SearchTicketDto;
 import org.project.trainticketbookingsystem.dto.SegmentDto;
 import org.project.trainticketbookingsystem.service.RouteService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -47,13 +46,8 @@ public class RouteController {
 
     @GetMapping("/specificRoute/{id}")
     public ResponseEntity<RouteDto> getRouteById(@PathVariable Long id) {
-        RouteDto routeDto;
-        try {
-            routeDto = routeService.getRouteById(id);
-            return ResponseEntity.ok(routeDto);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+        RouteDto routeDto = routeService.getRouteById(id);
+        return ResponseEntity.ok(routeDto);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -69,5 +63,4 @@ public class RouteController {
         RouteDto updatedRoute = routeService.updateRoute(id, routeDto);
         return ResponseEntity.ok(updatedRoute);
     }
-
 }

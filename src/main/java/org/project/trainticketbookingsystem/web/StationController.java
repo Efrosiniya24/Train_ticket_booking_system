@@ -4,7 +4,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.project.trainticketbookingsystem.dto.StationDto;
 import org.project.trainticketbookingsystem.service.StationService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,12 +29,8 @@ public class StationController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/add")
     public ResponseEntity<StationDto> addStation(@RequestBody StationDto stationDTO) {
-        try {
-            StationDto savedStationDto = stationService.addStation(stationDTO);
-            return ResponseEntity.ok(savedStationDto);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
-        }
+        StationDto savedStationDto = stationService.addStation(stationDTO);
+        return ResponseEntity.ok(savedStationDto);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
