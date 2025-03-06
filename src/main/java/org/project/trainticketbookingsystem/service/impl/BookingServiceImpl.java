@@ -1,23 +1,32 @@
 package org.project.trainticketbookingsystem.service.impl;
 
 import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
-import org.project.trainticketbookingsystem.dto.BookingDTO;
-import org.project.trainticketbookingsystem.entity.*;
-import org.project.trainticketbookingsystem.mapper.BookingMapper;
-import org.project.trainticketbookingsystem.repository.*;
-import org.project.trainticketbookingsystem.service.*;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Primary;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.project.trainticketbookingsystem.dto.BookingDto;
+import org.project.trainticketbookingsystem.entity.BookingEntity;
+import org.project.trainticketbookingsystem.entity.RouteStationTimeEntity;
+import org.project.trainticketbookingsystem.entity.SeatEntity;
+import org.project.trainticketbookingsystem.entity.TrainEntity;
+import org.project.trainticketbookingsystem.entity.UserEntity;
+import org.project.trainticketbookingsystem.exceptions.SeatException;
+import org.project.trainticketbookingsystem.mapper.BookingMapper;
+import org.project.trainticketbookingsystem.repository.BookingRepository;
+import org.project.trainticketbookingsystem.service.BookingService;
+import org.project.trainticketbookingsystem.service.RouteStationTimeService;
+import org.project.trainticketbookingsystem.service.SeatService;
+import org.project.trainticketbookingsystem.service.TrainService;
+import org.project.trainticketbookingsystem.service.UserService;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-public class BookingServiceImpl implements BookingService{
+public class BookingServiceImpl implements BookingService {
 
     private final SeatService seatService;
     private final TrainService trainService;
@@ -27,34 +36,46 @@ public class BookingServiceImpl implements BookingService{
     private final UserService userService;
 
     @PostConstruct
-    public void init() {
-        System.out.println("BookingServiceImpl created");
+    public void checkBean() {
+        log.info("BookingServiceImpl создан: {}", this);
     }
 
-    public BookingDTO bookTicket(BookingDTO bookingDTO, UserDetails user) {
-        System.out.println("BookingService.bookTicket() called");
+    @Transactional
+    @Override
+    public BookingDto bookTicket(BookingDto bookingDTO, UserDetails user) {
+        //расширить user details с id
+        Long userId = ((UserEntity) user).getId();
 
-        List<SeatEntity> seat = seatService.getSeatEntityFromBooking(bookingDTO);
-        UserEntity userEntity = userService.findUserByEmail(user.getUsername());
-        TrainEntity train = trainService.getTrainEntityById(bookingDTO.getTrainId());
-        RouteStationTimeEntity departureStation = routeStationTimeService.findRouteByNameStation(bookingDTO.getRouteId(), bookingDTO.getDepartureStation().getName());
-        RouteStationTimeEntity arrivalStation = routeStationTimeService.findRouteByNameStation(bookingDTO.getRouteId(), bookingDTO.getArrivalStation().getName());
-        List<Long> seatIds = seatService.getSeatsId(bookingDTO.getSeatsList());
+        List<RouteStationTimeEntity> stations = routeStationTimeService.findByRouteIdAndStationId(bookingDTO.getRouteId(), bookingDTO.getDepartureStation().getId(), bookingDTO.getArrivalStation().getId());
+        RouteStationTimeEntity departureStation;
+        RouteStationTimeEntity arrivalStation;
 
-        List<BookingEntity> conflicts = bookingRepository.findConflictingBookings(
-                seatIds,
-                bookingDTO.getTrainId(),
-                bookingDTO.getTravelDate(),
-                departureStation.getStopOrder(),
-                arrivalStation.getStopOrder()
-        );
-
-        if (!conflicts.isEmpty()) {
-            throw new RuntimeException("Seat is already booked on this segment for this date and train");
+        if (stations.get(0).getStation().getId().equals(bookingDTO.getDepartureStation().getId())) {
+            departureStation = stations.get(0);
+            arrivalStation = stations.get(1);
+        } else {
+            departureStation = stations.get(1);
+            arrivalStation = stations.get(2);
         }
 
+        List<SeatEntity> seatEntity = seatService.getSeatEntityFromBooking(bookingDTO);
+        List<Long> seatIds = seatEntity.stream()
+                .map(SeatEntity::getId)
+                .collect(Collectors.toList());
+
+        List<BookingEntity> allBookings = bookingRepository.findByTrainIdAndRouteIdAndArrivalDate(
+                bookingDTO.getTrainId(),
+                bookingDTO.getRouteId(),
+                bookingDTO.getTravelDate()
+        );
+
+        hasConflicts(allBookings, departureStation, arrivalStation, bookingDTO.getRouteId(), seatIds);
+
+        TrainEntity train = trainService.getTrainEntityById(bookingDTO.getTrainId());
+        UserEntity userEntity = userService.findById(userId);
+
         BookingEntity booking = BookingEntity.builder()
-                .seats(seat)
+                .seats(seatEntity)
                 .train(train)
                 .route(departureStation.getRoute())
                 .departureStation(departureStation.getStation())
@@ -64,5 +85,35 @@ public class BookingServiceImpl implements BookingService{
                 .build();
 
         return bookingMapper.toBookingDTO(bookingRepository.save(booking));
+    }
+
+    private boolean hasConflicts(List<BookingEntity> allBookings,
+                                 RouteStationTimeEntity departureStation,
+                                 RouteStationTimeEntity arrivalStation,
+                                 Long routeID,
+                                 List<Long> seatIds) {
+
+        int departureStopOrder = departureStation.getStopOrder();
+        int arrivalStopOrder = arrivalStation.getStopOrder();
+
+        boolean hasConflict = allBookings.stream()
+                .filter(booking -> booking.getSeats().
+                        stream().anyMatch(seat -> seatIds.contains(seat.getId())))
+                .anyMatch(booking -> {
+                    int bookedDepartureOrder = routeStationTimeService
+                            .findByRouteIdAndStationId(routeID, booking.getDepartureStation().getId())
+                            .getStopOrder();
+                    int bookedArrivalOrder = routeStationTimeService
+                            .findByRouteIdAndStationId(routeID, booking.getArrivalStation().getId())
+                            .getStopOrder();
+
+                    return (departureStopOrder >= bookedDepartureOrder && departureStopOrder < bookedArrivalOrder) ||
+                            (arrivalStopOrder > bookedDepartureOrder && arrivalStopOrder <= bookedArrivalOrder);
+                });
+
+        if (hasConflict) {
+            throw new SeatException("The seat is occupied");
+        }
+        return false;
     }
 }
