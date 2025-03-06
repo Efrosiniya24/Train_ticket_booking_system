@@ -1,37 +1,42 @@
 package org.project.trainticketbookingsystem.web;
 
-import lombok.AllArgsConstructor;
-import org.project.trainticketbookingsystem.dto.TrainDTO;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.project.trainticketbookingsystem.dto.TrainDto;
 import org.project.trainticketbookingsystem.service.TrainService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RestController
 @RequestMapping("/train")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class TrainController {
     private final TrainService trainService;
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/addTrain")
-    public ResponseEntity<TrainDTO> addTrain(@RequestBody TrainDTO trainDTO) {
-        TrainDTO train;
+    public ResponseEntity<TrainDto> addTrain(@RequestBody TrainDto trainDTO) {
+        TrainDto train;
         try {
-              train= trainService.addTrain(trainDTO);
+            train = trainService.addTrain(trainDTO);
             return ResponseEntity.ok(train);
-        }catch (RuntimeException e) {
+        } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
         }
     }
 
     @GetMapping("/allTrains")
-    public ResponseEntity<List<TrainDTO>> getAllTrains() {
-        List<TrainDTO> trainDTO = trainService.getAllTrains();
+    public ResponseEntity<List<TrainDto>> getAllTrains() {
+        List<TrainDto> trainDTO = trainService.getAllTrains();
         return ResponseEntity.ok(trainDTO);
     }
 
@@ -41,7 +46,7 @@ public class TrainController {
         try {
             numberOfSeats = trainService.getNumberOfSeats(id);
             return ResponseEntity.ok(numberOfSeats);
-        }catch (RuntimeException e) {
+        } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
@@ -55,8 +60,8 @@ public class TrainController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/update/{id}")
-    public ResponseEntity<TrainDTO> updateTrain(@PathVariable Long id, @RequestBody TrainDTO trainDTO) {
-        TrainDTO updatedTrain = trainService.updateTrain(id,trainDTO);
+    public ResponseEntity<TrainDto> updateTrain(@PathVariable Long id, @RequestBody TrainDto trainDTO) {
+        TrainDto updatedTrain = trainService.updateTrain(id, trainDTO);
         return ResponseEntity.ok(updatedTrain);
     }
 }
