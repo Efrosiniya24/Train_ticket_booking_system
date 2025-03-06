@@ -1,13 +1,14 @@
 package org.project.trainticketbookingsystem.service;
 
-import org.project.trainticketbookingsystem.dto.RouteStationTimeDTO;
+import java.util.List;
+import org.project.trainticketbookingsystem.dto.RouteStationTimeDto;
 import org.project.trainticketbookingsystem.entity.RouteEntity;
 import org.project.trainticketbookingsystem.entity.RouteStationTimeEntity;
 
-import java.util.List;
-
 public interface RouteStationTimeService {
-    List<RouteStationTimeEntity> create(List<RouteStationTimeDTO> routeStationTimeDTOS, RouteEntity routeEntity);
+    List<RouteStationTimeEntity> create(List<RouteStationTimeDto> routeStationTimeDtos, RouteEntity routeEntity);
+
     RouteStationTimeEntity findRouteByNameStation(Long routeId, String stationName);
-    List<RouteStationTimeEntity> update(List<RouteStationTimeDTO> routeStationTimeDTO, RouteEntity routeEntity);
+
+    List<RouteStationTimeEntity> update(List<RouteStationTimeDto> routeStationTimeDTO, RouteEntity routeEntity);
 }

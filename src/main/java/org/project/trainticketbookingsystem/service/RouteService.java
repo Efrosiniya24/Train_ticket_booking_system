@@ -1,20 +1,22 @@
 package org.project.trainticketbookingsystem.service;
 
-import org.project.trainticketbookingsystem.dto.RouteDTO;
-import org.project.trainticketbookingsystem.dto.SearchTicketDTO;
-import org.project.trainticketbookingsystem.dto.SegmentDTO;
-import org.project.trainticketbookingsystem.entity.RouteEntity;
-
 import java.util.List;
+import org.project.trainticketbookingsystem.dto.RouteDto;
+import org.project.trainticketbookingsystem.dto.SearchTicketDto;
+import org.project.trainticketbookingsystem.dto.SegmentDto;
 
 public interface RouteService {
-    RouteDTO createRoute(RouteDTO routDTO);
-    List<RouteDTO> getAllRoutes();
-    List<RouteDTO> searchRoutes(SearchTicketDTO searchTicketDTO);
-    List<RouteDTO> toRouteDTOList(List<RouteEntity> routeEntities);
-    List<SegmentDTO> getRequirementSegment(List<RouteDTO> routeDTOs, SearchTicketDTO searchTicketDTO);
-    RouteDTO getRouteById(Long id);
-    RouteDTO toRouteDTO(RouteEntity routeEntity);
+    RouteDto createRoute(RouteDto routDTO);
+
+    List<RouteDto> getAllRoutes();
+
+    List<RouteDto> searchRoutes(SearchTicketDto searchTicketDTO);
+
+    List<SegmentDto> getRequirementSegment(List<RouteDto> routeDTOs, SearchTicketDto searchTicketDTO);
+
+    RouteDto getRouteById(Long id);
+
     void deleteRoute(Long id);
-    RouteDTO updateRoute(Long id, RouteDTO routeDTO);
+
+    RouteDto updateRoute(Long id, RouteDto routeDTO);
 }
