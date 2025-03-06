@@ -4,6 +4,7 @@ import commonStyle from "../styles/forAllPAges.module.css";
 import Header from "../../components/headerMain/headerMain";
 import { useEffect, useState } from "react"; 
 import axios from "axios"; 
+import { FaTrash } from "react-icons/fa";
 
 const SearchRoute = () => {
 
@@ -12,6 +13,7 @@ const SearchRoute = () => {
     const [isLoading, setIsLoading] = useState(false); 
     const [error, setError] = useState(null);
     const [searchResults, setSearchResults] = useState(null);
+        const [hoveredRow, setHoveredRow] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -54,10 +56,12 @@ const SearchRoute = () => {
             return;
         }
         
+        const departureStationObj = allStations.find(station => station.name === stations[0].departureStation);
+        const arrivalStationObj = allStations.find(station => station.name === stations[0].arrivalStation); 
     
         const searchTicketDTO = {
-            departureCity: stations[0].departureStation, 
-            arrivalCity: stations[0].arrivalStation, 
+            departureCityId: departureStationObj.id,
+            arrivalCityId: arrivalStationObj.id,
             departureDate: stations[0].departureDate
         };
     
@@ -145,11 +149,52 @@ const SearchRoute = () => {
                                 </div>
                         </div>
                     ))}
-                    {searchResults && ( 
+
+                    {searchResults && (
                         <div className={style.resultOfSearch}>
-                            
+                            <div className={style.headerRoutes}>
+                                <h1>
+                                    {`${searchResults?.[0]?.departureCity || "Нет данных"} – 
+                                    ${searchResults?.[0]?.arrivalCity || "Нет данных"}, 
+                                    ${new Date(searchResults?.[0]?.departureDateTime).toLocaleDateString("ru-RU", { day: "numeric", month: "long" }) || "Нет данных"}`}
+                                </h1>
+                            </div>
+                            <table className={`${style.tableRoutes} ${commonStyle.tableRoute}`}>        
+                                <thead className={`${commonStyle.theadRoute} ${style.theadRoutes}`}>
+                                    <tr className={commonStyle.first}>
+                                        <th>Поезд</th>
+                                        <th>Прибытие</th>
+                                        <th>Отбытие</th>
+                                        <th>Продолжительность</th>
+                                        <th>Стоимость</th>
+                                    </tr>
+                                </thead>   
+                                <tbody>
+                                    {searchResults.map((route) => (                                       
+                                        <tr 
+                                            key={route.id} 
+                                            onMouseEnter={() => setHoveredRow(route.id)}
+                                            onMouseLeave={() => setHoveredRow(null)}
+                                        >                                  
+                                            <td>{`${route.trainDTO.train}
+                                            ${route.firstCityRoute} - ${route.lastCityRoute}`}</td>
+                                            <td>{new Date(searchResults?.[0]?.arrivalDateTime)
+                                                .toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" }) || "Нет данных"}
+                                            </td>
+                                            <td>{new Date(searchResults?.[0]?.departureDateTime)
+                                                .toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" }) || "Нет данных"}
+                                            </td>
+                                                <td>{searchResults?.[0]?.timeRoad || "Нет данных"}</td>
+                                                <td>{route.price}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+
                         </div>
                     )}
+
+
                 </div>
             </div>
         </div>

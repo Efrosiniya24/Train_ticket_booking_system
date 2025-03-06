@@ -21,6 +21,7 @@
     height: 40px;
     background-color: #FCEC9D; 
     border: none;
+    outline: none;
     font-weight: bold;
     font-size: 15px;
     border-radius: 20px;
@@ -32,3 +33,26 @@
     transform: scale(1.03);
     transition: transform 0.1s ease; 
 }
+
+.resultOfSearch{
+    display: flex;
+    width: 1000px;
+    height: 100px;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.tableRoutes{
+    width: 1000px;
+    border: transparent; 
+    border-radius: 15px;
+}
+
+.theadRoutes tr:first-child th:first-child {
+    border-top-left-radius: 15px; 
+}
+
+.theadRoutes tr:first-child th:last-child {
+    border-top-right-radius: 15px; 
+}
+
