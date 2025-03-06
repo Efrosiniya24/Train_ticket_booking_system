@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RouteStationTimeRepository extends JpaRepository<RouteStationTimeEntity, Long> {
-    RouteStationTimeEntity findByIdAndStation_Name(Long id, String station_name);
+    RouteStationTimeEntity findByStationIdAndRouteId(Long station_id, Long route_id);
 }
