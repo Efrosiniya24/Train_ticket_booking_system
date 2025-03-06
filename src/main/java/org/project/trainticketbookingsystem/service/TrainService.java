@@ -1,16 +1,16 @@
 package org.project.trainticketbookingsystem.service;
 
-import org.project.trainticketbookingsystem.dto.TrainDTO;
+import org.project.trainticketbookingsystem.dto.TrainDto;
 import org.project.trainticketbookingsystem.entity.TrainEntity;
 
 import java.util.List;
 
 public interface TrainService {
-    TrainDTO addTrain(TrainDTO train);
-    List<TrainDTO> getAllTrains();
-    TrainDTO getTrainById(Long id);
+    TrainDto addTrain(TrainDto train);
+    List<TrainDto> getAllTrains();
+    TrainDto getTrainById(Long id);
     int getNumberOfSeats(Long trainId);
     TrainEntity getTrainEntityById(Long id);
     void deleteTrainById(Long id);
-    TrainDTO updateTrain(Long id, TrainDTO trainDTO);
+    TrainDto updateTrain(Long id, TrainDto trainDTO);
 }

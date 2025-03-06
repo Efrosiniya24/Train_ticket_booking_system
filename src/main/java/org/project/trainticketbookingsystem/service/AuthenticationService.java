@@ -1,11 +1,11 @@
 package org.project.trainticketbookingsystem.service;
 
-import org.project.trainticketbookingsystem.dto.ResponseDTO;
-import org.project.trainticketbookingsystem.dto.SignInRequestDTO;
-import org.project.trainticketbookingsystem.dto.SignUpRequestDTO;
+import org.project.trainticketbookingsystem.dto.ResponseDto;
+import org.project.trainticketbookingsystem.dto.SignInRequestDto;
+import org.project.trainticketbookingsystem.dto.SignUpRequestDto;
 
 public interface AuthenticationService {
-    ResponseDTO signUp(SignUpRequestDTO signUpRequestDTO);
-    ResponseDTO signIn(SignInRequestDTO requestDTO);
+    ResponseDto signUp(SignUpRequestDto signUpRequestDTO);
+    ResponseDto signIn(SignInRequestDto requestDTO);
     boolean validateToken(String token);
 }
