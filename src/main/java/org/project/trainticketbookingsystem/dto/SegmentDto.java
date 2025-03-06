@@ -8,15 +8,16 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-public class SegmentDTO {
+public class SegmentDto {
     private int segmentID;
-    private TrainDTO trainDTO;
+    private TrainDto trainDTO;
     private LocalDateTime departureDateTime;
     private LocalDateTime arrivalDateTime;
     private String departureCity;
     private String arrivalCity;
-    private RouteDTO routeDTO;
+    private RouteDto routeDTO;
     private String firstCityRoute;
     private String lastCityRoute;
-    private Duration timeRoad;
+    private String timeRoad;
+    private double price;
 }
