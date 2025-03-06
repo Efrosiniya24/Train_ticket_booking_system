@@ -9,8 +9,8 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SearchTicketDTO {
-    private String departureCity;
-    private String arrivalCity;
+public class SearchTicketDto {
+    private Long departureCityId;
+    private Long arrivalCityId;
     private LocalDate departureDate;
 }
