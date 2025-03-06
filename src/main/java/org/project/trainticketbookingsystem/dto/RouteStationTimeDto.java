@@ -5,10 +5,10 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class RouteStationTimeDTO {
+public class RouteStationTimeDto {
     private Long id;
     private int stopOrder;
     private LocalDateTime departureDate;
     private LocalDateTime arrivalDate;
-    private StationDTO stationDTO;
+    private StationDto stationDTO;
 }

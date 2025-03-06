@@ -6,8 +6,8 @@ import java.util.List;
 
 @Data
 @Builder
-public class TrainDTO {
+public class TrainDto {
     private Long id;
     private String train;
-    private List<CoachDTO> coachDTOList;
+    private List<CoachDto> coachDtoList;
 }

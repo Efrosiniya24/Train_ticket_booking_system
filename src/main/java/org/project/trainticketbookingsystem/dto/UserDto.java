@@ -1,14 +1,15 @@
 package org.project.trainticketbookingsystem.dto;
 
+import lombok.Builder;
 import lombok.Data;
-import org.project.trainticketbookingsystem.Enum.Role;
 
 @Data
-public class SignUpRequestDTO {
+@Builder
+public class UserDto {
+    private Long id;
     private String name;
     private String surname;
     private String patronymic;
     private String email;
     private String password;
-    private Role role;
 }

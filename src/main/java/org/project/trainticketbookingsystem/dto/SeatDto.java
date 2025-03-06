@@ -3,8 +3,8 @@ package org.project.trainticketbookingsystem.dto;
 import lombok.Data;
 
 @Data
-public class StationDTO {
-
+public class SeatDto {
     private Long id;
-    private String name;
+    private int number;
+    private double price;
 }
