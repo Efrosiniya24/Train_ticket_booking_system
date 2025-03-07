@@ -34,14 +34,8 @@ public class TrainServiceImpl implements TrainService {
 
     @Override
     public List<TrainDto> getAllTrains() {
-        List<TrainEntity> trainEntities = trainRepository.findAll();
-        return trainEntities.stream()
-                .map(trainEntity -> {
-                    TrainDto trainDTO = trainMapper.toTrainDTO(trainEntity);
-                    trainDTO.setCoachDtoList(trainEntity.getCoachEntities().stream()
-                            .map(coachService::toCoachDTO).toList());
-                    return trainDTO;
-                })
+        return trainRepository.findAll().stream()
+                .map(trainMapper::toTrainDTO)
                 .collect(Collectors.toList());
     }
 

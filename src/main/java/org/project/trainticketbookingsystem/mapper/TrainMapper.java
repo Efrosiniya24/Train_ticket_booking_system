@@ -1,14 +1,14 @@
 package org.project.trainticketbookingsystem.mapper;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.project.trainticketbookingsystem.dto.TrainDto;
 import org.project.trainticketbookingsystem.entity.TrainEntity;
 
-import java.util.List;
-
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = CoachMapper.class)
 public interface TrainMapper {
-    List<TrainDto> toTrainDTO(List<TrainEntity> trainEntity);
+    @Mapping(source = "coachEntities", target = "coachDtoList")
     TrainDto toTrainDTO(TrainEntity trainEntity);
+
     TrainEntity toTrainEntity(TrainDto trainDTO);
 }
