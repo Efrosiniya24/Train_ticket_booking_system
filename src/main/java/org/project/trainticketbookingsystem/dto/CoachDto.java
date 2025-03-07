@@ -1,8 +1,7 @@
 package org.project.trainticketbookingsystem.dto;
 
-import lombok.Data;
-
 import java.util.List;
+import lombok.Data;
 
 @Data
 public class CoachDto {
