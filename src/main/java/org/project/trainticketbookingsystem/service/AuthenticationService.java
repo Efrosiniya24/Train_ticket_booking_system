@@ -6,6 +6,8 @@ import org.project.trainticketbookingsystem.dto.SignUpRequestDto;
 
 public interface AuthenticationService {
     ResponseDto signUp(SignUpRequestDto signUpRequestDTO);
+
     ResponseDto signIn(SignInRequestDto requestDTO);
-    boolean validateToken(String token);
+
+    boolean validateToken(String authHeader);
 }

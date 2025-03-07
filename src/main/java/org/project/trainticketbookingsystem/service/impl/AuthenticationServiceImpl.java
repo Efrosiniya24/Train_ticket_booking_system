@@ -7,6 +7,7 @@ import org.project.trainticketbookingsystem.dto.ResponseDto;
 import org.project.trainticketbookingsystem.dto.SignInRequestDto;
 import org.project.trainticketbookingsystem.dto.SignUpRequestDto;
 import org.project.trainticketbookingsystem.entity.UserEntity;
+import org.project.trainticketbookingsystem.exceptions.UserException;
 import org.project.trainticketbookingsystem.repository.UserRepository;
 import org.project.trainticketbookingsystem.service.AuthenticationService;
 import org.project.trainticketbookingsystem.service.JWTService;
@@ -66,7 +67,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public boolean validateToken(String token) {
+    public boolean validateToken(String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new UserException("Missing or invalid Authorization header");
+        }
+        String token = authHeader.replace("Bearer ", "");
         try {
             Claims claims = jwtService.extractAllClaims(token);
             return claims.getExpiration().after(new Date());

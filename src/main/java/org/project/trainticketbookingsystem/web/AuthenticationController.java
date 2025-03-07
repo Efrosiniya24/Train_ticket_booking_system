@@ -43,12 +43,7 @@ public class AuthenticationController {
 
     @PostMapping("/validateToken")
     private ResponseEntity<String> validateToken(@RequestHeader("Authorization") String authHeader) {
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing or invalid Authorization header");
-        }
-        String token = authHeader.replace("Bearer ", "");
-        boolean isValid = authenticationService.validateToken(token);
-
+        boolean isValid = authenticationService.validateToken(authHeader);
         return isValid ? ResponseEntity.ok("Valid Token")
                 : ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
     }
