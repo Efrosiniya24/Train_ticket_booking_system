@@ -1,11 +1,10 @@
 package org.project.trainticketbookingsystem.service.impl;
 
-import jakarta.annotation.PostConstruct;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.project.trainticketbookingsystem.config.UserDetailsImpl;
 import org.project.trainticketbookingsystem.dto.BookingDto;
 import org.project.trainticketbookingsystem.entity.BookingEntity;
 import org.project.trainticketbookingsystem.entity.RouteStationTimeEntity;
@@ -22,7 +21,6 @@ import org.project.trainticketbookingsystem.service.TrainService;
 import org.project.trainticketbookingsystem.service.UserService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -38,8 +36,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingDto bookTicket(BookingDto bookingDTO, UserDetails user) {
-        //расширить user details с id
-        Long userId = ((UserEntity) user).getId();
+        Long userId = ((UserDetailsImpl) user).getId();
 
         List<RouteStationTimeEntity> stations = routeStationTimeService.findByRouteIdAndStationId(bookingDTO.getRouteId(), bookingDTO.getDepartureStation().getId(), bookingDTO.getArrivalStation().getId());
         RouteStationTimeEntity departureStation;

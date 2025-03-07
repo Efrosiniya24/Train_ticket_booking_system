@@ -2,44 +2,53 @@ package org.project.trainticketbookingsystem.config;
 
 import java.util.Collection;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.project.trainticketbookingsystem.entity.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
 
-@Component
+@RequiredArgsConstructor
 public class UserDetailsImpl implements UserDetails {
+
+    private final UserEntity userEntity;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
-    }
-
-    @Override
-    public String getPassword() {
-        return "";
+        return List.of(new SimpleGrantedAuthority(userEntity.getRole().name()));
     }
 
     @Override
     public String getUsername() {
-        return "";
+        return userEntity.getEmail();
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return UserDetails.super.isAccountNonExpired();
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return UserDetails.super.isAccountNonLocked();
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return UserDetails.super.isCredentialsNonExpired();
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
+        return true;
+    }
+
+    @Override
+    public String getPassword() {
+        return userEntity.getPassword();
+    }
+
+    public Long getId() {
+        return userEntity.getId();
     }
 }

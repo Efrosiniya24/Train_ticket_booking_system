@@ -6,18 +6,22 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import java.security.Key;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.project.trainticketbookingsystem.config.UserDetailsImpl;
 import org.project.trainticketbookingsystem.entity.UserEntity;
 import org.project.trainticketbookingsystem.service.JWTService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-
-import java.security.Key;
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,10 +35,13 @@ public class JWTServiceImpl implements JWTService {
         Map<String, Object> claims = new HashMap<>();
         List<String> roles = new ArrayList<>();
         roles.add("ADMIN");
-        claims.put("roles", user.getAuthorities().stream()
+
+        UserDetailsImpl userDetails = new UserDetailsImpl(user);
+
+        claims.put("roles", userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList()));
-        return generateToken(claims, user);
+        return generateToken(claims, userDetails);
     }
 
     public String generateToken(
