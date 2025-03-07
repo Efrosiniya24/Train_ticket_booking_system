@@ -33,8 +33,9 @@ public class StationServiceImpl implements StationService {
     }
 
     @Override
-    public void deleteStation(Long id) {
-        stationRepository.deleteById(id);
+    public void deleteStation(Long stationId) {
+        stationRepository.findById(stationId).orElseThrow(() -> new StationException("Station does not exist"));
+        stationRepository.deleteById(stationId);
     }
 
     @Override
