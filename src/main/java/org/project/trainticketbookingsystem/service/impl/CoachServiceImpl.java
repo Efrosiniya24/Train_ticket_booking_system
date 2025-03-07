@@ -28,10 +28,18 @@ public class CoachServiceImpl implements CoachService {
                 .numberOfSeats(coachDTO.getNumberOfSeats())
                 .train(trainEntity)
                 .build();
+
         coachRepository.save(coachEntity);
         seatService.createSeat(coachEntity, coachDTO.getSeats());
 
         return coachMapper.toCoachDTO(coachEntity);
+    }
+
+    @Override
+    public void createCoachList(TrainEntity trainEntity, List<CoachDto> coachDtos) {
+        for (CoachDto coachDTO : coachDtos) {
+            createCoach(trainEntity, coachDTO);
+        }
     }
 
     @Override

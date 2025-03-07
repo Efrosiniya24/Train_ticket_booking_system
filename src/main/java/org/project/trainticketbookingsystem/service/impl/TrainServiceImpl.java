@@ -1,7 +1,8 @@
 package org.project.trainticketbookingsystem.service.impl;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.project.trainticketbookingsystem.dto.CoachDto;
 import org.project.trainticketbookingsystem.dto.TrainDto;
 import org.project.trainticketbookingsystem.entity.TrainEntity;
 import org.project.trainticketbookingsystem.exceptions.TrainException;
@@ -10,9 +11,6 @@ import org.project.trainticketbookingsystem.repository.TrainRepository;
 import org.project.trainticketbookingsystem.service.CoachService;
 import org.project.trainticketbookingsystem.service.TrainService;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,12 +27,8 @@ public class TrainServiceImpl implements TrainService {
             throw new TrainException("Train is already exist");
 
         trainRepository.save(trainEntity);
+        coachService.createCoachList(trainEntity, train.getCoachDtoList());
 
-        List<CoachDto> coachDtos = train.getCoachDtoList();
-
-        for (CoachDto coachDTO : coachDtos) {
-            coachService.createCoach(trainEntity, coachDTO);
-        }
         return trainMapper.toTrainDTO(trainEntity);
     }
 
