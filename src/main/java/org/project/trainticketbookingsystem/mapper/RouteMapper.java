@@ -28,4 +28,6 @@ public interface RouteMapper {
                 .routeStationTimeDTO(routeStationTimeDtos)
                 .build();
     }
+
+    RouteEntity toRouteEntity(RouteDto routeDto);
 }
