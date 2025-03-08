@@ -1,6 +1,7 @@
 package org.project.trainticketbookingsystem.service.impl;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.project.trainticketbookingsystem.dto.RouteStationTimeDto;
@@ -35,8 +36,11 @@ public class RouteStationTimeServiceImpl implements RouteStationTimeService {
     }
 
     @Override
-    public List<RouteStationTimeEntity> findByRouteIdAndStationId(Long routeId, Long departureStationId, Long arrivalStationId) {
-        return routeStationTimeRepository.findStationsByRouteAndDepartureArrival(routeId, departureStationId, arrivalStationId);
+    public Map<String, RouteStationTimeDto> findByRouteIdAndStationId(Long routeId, Long departureStationId, Long arrivalStationId) {
+        List<RouteStationTimeEntity> routeStationTimeEntities = routeStationTimeRepository.findStationsByRouteAndDepartureArrival(routeId, departureStationId, arrivalStationId);
+        List<RouteStationTimeDto> routeStationTimeDtos = routeStationTimeMapper.toRouteStationTimeDtoList(routeStationTimeEntities);
+        return Map.of(
+                "departureStation", routeStationTimeDtos.get(0), "arrivalStation", routeStationTimeDtos.get(1));
     }
 
     @Override
