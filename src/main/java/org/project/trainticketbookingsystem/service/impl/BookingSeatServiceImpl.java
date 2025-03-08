@@ -9,7 +9,7 @@ import org.project.trainticketbookingsystem.dto.CoachDto;
 import org.project.trainticketbookingsystem.dto.GetSeatStatusDto;
 import org.project.trainticketbookingsystem.dto.RouteStationTimeDto;
 import org.project.trainticketbookingsystem.dto.SeatDto;
-import org.project.trainticketbookingsystem.dto.SeatStatusDto;
+import org.project.trainticketbookingsystem.dto.SeatStatusDtoResponse;
 import org.project.trainticketbookingsystem.entity.BookingEntity;
 import org.project.trainticketbookingsystem.entity.SeatEntity;
 import org.project.trainticketbookingsystem.exceptions.SeatException;
@@ -87,7 +87,7 @@ public class BookingSeatServiceImpl implements BookingSeatService {
     }
 
     @Override
-    public List<SeatStatusDto> getSeatsWithStatusForSegment(GetSeatStatusDto statusDto) {
+    public List<SeatStatusDtoResponse> getSeatsWithStatusForSegment(GetSeatStatusDto statusDto) {
         List<CoachDto> coachDtos = coachService.getCoachList(statusDto.getTrainId());
 
         List<Long> coachIds = coachDtos.stream().map(CoachDto::getId).collect(Collectors.toList());
@@ -104,7 +104,7 @@ public class BookingSeatServiceImpl implements BookingSeatService {
                 .collect(Collectors.toList());
 
         return seats.stream()
-                .map(seat -> SeatStatusDto.builder()
+                .map(seat -> SeatStatusDtoResponse.builder()
                         .seatId(seat.getId())
                         .coachId(seat.getCoach().getId())
                         .isBooked(bookedSeatIds.contains(seat.getId()))
