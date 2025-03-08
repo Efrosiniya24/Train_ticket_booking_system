@@ -43,11 +43,6 @@ public class CoachServiceImpl implements CoachService {
     }
 
     @Override
-    public CoachDto toCoachDTO(CoachEntity coachEntity) {
-        return coachMapper.toCoachDTO(coachEntity);
-    }
-
-    @Override
     public void deleteCoach(List<CoachEntity> coachEntities) {
         for (CoachEntity coachEntity : coachEntities) {
             seatService.deleteSeat(coachEntity.getSeats());
@@ -71,5 +66,11 @@ public class CoachServiceImpl implements CoachService {
 
         coachRepository.saveAll(coachEntities);
         return coachEntities;
+    }
+
+    @Override
+    public List<CoachDto> getCoachList(Long trainId) {
+        List<CoachEntity> coaches = coachRepository.findByTrain_Id(trainId);
+        return coachMapper.toCoachDTO(coaches);
     }
 }

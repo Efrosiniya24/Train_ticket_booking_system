@@ -10,9 +10,9 @@ public interface CoachService {
 
     void createCoachList(TrainEntity trainEntity, List<CoachDto> coachDtos);
 
-    CoachDto toCoachDTO(CoachEntity coachEntity);
-
     void deleteCoach(List<CoachEntity> coachEntities);
 
     List<CoachEntity> update(List<CoachDto> coachDtoList);
+
+    List<CoachDto> getCoachList(Long trainId);
 }
