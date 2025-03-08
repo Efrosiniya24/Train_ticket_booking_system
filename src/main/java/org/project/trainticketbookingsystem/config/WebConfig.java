@@ -1,4 +1,4 @@
-package com.tourAgency.tourAgencyJava.security;
+package org.project.trainticketbookingsystem.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
