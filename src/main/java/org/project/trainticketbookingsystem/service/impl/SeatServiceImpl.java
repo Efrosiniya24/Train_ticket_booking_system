@@ -1,7 +1,8 @@
 package org.project.trainticketbookingsystem.service.impl;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.project.trainticketbookingsystem.dto.BookingDto;
 import org.project.trainticketbookingsystem.dto.SeatDto;
 import org.project.trainticketbookingsystem.entity.CoachEntity;
 import org.project.trainticketbookingsystem.entity.SeatEntity;
@@ -10,9 +11,6 @@ import org.project.trainticketbookingsystem.mapper.SeatMapper;
 import org.project.trainticketbookingsystem.repository.SeatRepository;
 import org.project.trainticketbookingsystem.service.SeatService;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,20 +29,6 @@ public class SeatServiceImpl implements SeatService {
 
         seatRepository.saveAll(seatEntities);
         return seatMapper.toSeatDTO(seatEntities);
-    }
-
-    @Override
-    public List<SeatEntity> getSeatEntityFromBooking(BookingDto bookingDTO) {
-        return bookingDTO.getSeatsList().stream()
-                .map(currentSeat -> seatRepository.findById(currentSeat.getId()).orElseThrow(() -> new SeatException("Seat not found")))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<Long> getSeatsId(List<SeatEntity> seatEntities) {
-        return seatEntities.stream()
-                .map(SeatEntity::getId)
-                .collect(Collectors.toList());
     }
 
     @Override
@@ -69,5 +53,11 @@ public class SeatServiceImpl implements SeatService {
     @Override
     public double getPrice(Long trainId) {
         return seatRepository.findSinglePriceByTrainId(trainId);
+    }
+
+    @Override
+    public SeatEntity getSeatById(Long seatId) {
+        return seatRepository.findById(seatId)
+                .orElseThrow(() -> new SeatException("Seat not found"));
     }
 }
