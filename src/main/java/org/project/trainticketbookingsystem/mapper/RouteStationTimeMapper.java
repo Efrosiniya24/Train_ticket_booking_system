@@ -11,11 +11,13 @@ public interface RouteStationTimeMapper {
     RouteStationTimeEntity toRouteStationTimeEntity(RouteStationTimeDto routeStationTimeDTO);
 
     @Mapping(target = "stationDTO", source = "station")
+    @Mapping(target = "routeDTO", source = "route")
     RouteStationTimeDto toRouteStationTimeDTO(RouteStationTimeEntity routeStationTimeEntity);
 
     List<RouteStationTimeEntity> toRouteStationTimeEntityList(List<RouteStationTimeDto> routeStationTimeDTOList);
 
     @Mapping(target = "stationDTO", source = "station")
+    @Mapping(target = "routeDTO", source = "route" )
     List<RouteStationTimeDto> toRouteStationTimeDtoList(List<RouteStationTimeEntity> routeStationTimeEntityList);
 }
 
