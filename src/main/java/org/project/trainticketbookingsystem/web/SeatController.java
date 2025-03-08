@@ -1,6 +1,5 @@
 package org.project.trainticketbookingsystem.web;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.project.trainticketbookingsystem.dto.GetSeatStatusDto;
 import org.project.trainticketbookingsystem.dto.SeatStatusDtoResponse;
@@ -18,7 +17,7 @@ public class SeatController {
     private final BookingSeatService bookingSeatService;
 
     @GetMapping("/seatWithStatus")
-    public ResponseEntity<List<SeatStatusDtoResponse>> getSeatsWithStatus(@RequestBody GetSeatStatusDto statusDto) {
+    public ResponseEntity<SeatStatusDtoResponse> getSeatsWithStatus(@RequestBody GetSeatStatusDto statusDto) {
         return ResponseEntity.ok(bookingSeatService.getSeatsWithStatusForSegment(statusDto));
     }
 }

@@ -1,12 +1,13 @@
 package org.project.trainticketbookingsystem.dto;
 
-import java.util.Map;
+import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class SeatStatusDtoResponse {
-    private Map<Long, CoachSeatInfo> coachDtos;
+public class CoachSeatInfo {
+    private Long coachId;
+    private List<SeatInfo> seats;
     private int freeSeats;
 }

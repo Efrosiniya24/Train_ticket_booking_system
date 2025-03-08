@@ -11,5 +11,5 @@ import org.project.trainticketbookingsystem.dto.SeatStatusDtoResponse;
 public interface BookingSeatService {
     List<SeatDto> getSeatBooking(BookingDto bookingDto, Map<String, RouteStationTimeDto> stations);
 
-    List<SeatStatusDtoResponse> getSeatsWithStatusForSegment(GetSeatStatusDto statusDto);
+    SeatStatusDtoResponse getSeatsWithStatusForSegment(GetSeatStatusDto statusDto);
 }

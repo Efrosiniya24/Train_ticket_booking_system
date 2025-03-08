@@ -6,9 +6,11 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.project.trainticketbookingsystem.dto.BookingDto;
 import org.project.trainticketbookingsystem.dto.CoachDto;
+import org.project.trainticketbookingsystem.dto.CoachSeatInfo;
 import org.project.trainticketbookingsystem.dto.GetSeatStatusDto;
 import org.project.trainticketbookingsystem.dto.RouteStationTimeDto;
 import org.project.trainticketbookingsystem.dto.SeatDto;
+import org.project.trainticketbookingsystem.dto.SeatInfo;
 import org.project.trainticketbookingsystem.dto.SeatStatusDtoResponse;
 import org.project.trainticketbookingsystem.entity.BookingEntity;
 import org.project.trainticketbookingsystem.entity.SeatEntity;
@@ -87,9 +89,8 @@ public class BookingSeatServiceImpl implements BookingSeatService {
     }
 
     @Override
-    public List<SeatStatusDtoResponse> getSeatsWithStatusForSegment(GetSeatStatusDto statusDto) {
+    public SeatStatusDtoResponse getSeatsWithStatusForSegment(GetSeatStatusDto statusDto) {
         List<CoachDto> coachDtos = coachService.getCoachList(statusDto.getTrainId());
-
         List<Long> coachIds = coachDtos.stream().map(CoachDto::getId).collect(Collectors.toList());
         List<SeatEntity> seats = seatRepository.findByCoachIdIn(coachIds);
 
@@ -103,12 +104,35 @@ public class BookingSeatServiceImpl implements BookingSeatService {
                 .flatMap(booking -> booking.getSeats().stream().map(SeatEntity::getId))
                 .collect(Collectors.toList());
 
-        return seats.stream()
-                .map(seat -> SeatStatusDtoResponse.builder()
-                        .seatId(seat.getId())
-                        .coachId(seat.getCoach().getId())
-                        .isBooked(bookedSeatIds.contains(seat.getId()))
-                        .build())
-                .collect(Collectors.toList());
+        Map<Long, List<SeatInfo>> coachSeatMap = seats.stream()
+                .collect(Collectors.groupingBy(
+                        seat -> seat.getCoach().getId(),
+                        Collectors.mapping(seat -> SeatInfo.builder()
+                                .seatId(seat.getId())
+                                .booked(bookedSeatIds.contains(seat.getId()))
+                                .build(), Collectors.toList())
+                ));
+
+        Map<Long, CoachSeatInfo> coachDtosMap = coachSeatMap.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> {
+                            List<SeatInfo> seatsInfo = entry.getValue();
+                            long freeSeatsCount = seatsInfo.stream().filter(seat -> !seat.isBooked()).count();
+
+                            return CoachSeatInfo.builder()
+                                    .coachId(entry.getKey())
+                                    .seats(seatsInfo)
+                                    .freeSeats((int) freeSeatsCount)
+                                    .build();
+                        }
+                ));
+
+        int totalFreeSeats = coachDtosMap.values().stream().mapToInt(CoachSeatInfo::getFreeSeats).sum();
+
+        return SeatStatusDtoResponse.builder()
+                .coachDtos(coachDtosMap)
+                .freeSeats(totalFreeSeats)
+                .build();
     }
 }
