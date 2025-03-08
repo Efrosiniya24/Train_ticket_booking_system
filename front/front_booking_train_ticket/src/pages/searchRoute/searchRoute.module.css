@@ -56,3 +56,19 @@
     border-top-right-radius: 15px; 
 }
 
+.chooseSeat{
+    padding: 5px;
+    width: 120px;
+    border: 1px solid #045952;
+    background-color: transparent;
+    color: #045952;
+    border-radius: 10px;
+    margin-left: 15px;
+    cursor: pointer;
+}
+
+.chooseSeat:hover{
+    transform: scale(1.03);
+    transition: transform 0.1s ease; 
+    background-color: #0459520b;
+}

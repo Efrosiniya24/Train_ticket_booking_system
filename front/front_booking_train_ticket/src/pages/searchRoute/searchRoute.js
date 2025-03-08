@@ -218,7 +218,9 @@ const SearchRoute = () => {
                                             </td>
                                             <td>{searchResults?.[0]?.timeRoad || "Нет данных"}</td>
                                             <td>{route.price} BYN</td>
-                                            <td>{route.freeSeats}</td>
+                                            <td>{route.freeSeats}
+                                                {route.freeSeats > 0 && <button className={style.chooseSeat}>Выбрать место</button>}
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>
