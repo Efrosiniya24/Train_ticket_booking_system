@@ -10,4 +10,5 @@ public class RouteStationTimeDto {
     private LocalDateTime departureDate;
     private LocalDateTime arrivalDate;
     private StationDto stationDTO;
+    private RouteDto routeDTO;
 }
