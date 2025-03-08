@@ -95,8 +95,8 @@ public class BookingSeatServiceImpl implements BookingSeatService {
 
         List<BookingEntity> bookingEntities = bookingRepository.findAll().stream()
                 .filter(booking -> booking.getRoute().getId().equals(statusDto.getRouteId()) &&
-                        booking.getDepartureStation().equals(statusDto.getDepartureStationId()) &&
-                        booking.getArrivalStation().equals(statusDto.getArrivalStationId()))
+                        booking.getDepartureStation().getId().equals(statusDto.getDepartureStationId()) &&
+                        booking.getArrivalStation().getId().equals(statusDto.getArrivalStationId()))
                 .collect(Collectors.toList());
 
         List<Long> bookedSeatIds = bookingEntities.stream()
