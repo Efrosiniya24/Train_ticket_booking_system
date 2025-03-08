@@ -4,7 +4,6 @@ import commonStyle from "../styles/forAllPAges.module.css";
 import Header from "../../components/headerMain/headerMain";
 import { useEffect, useState } from "react"; 
 import axios from "axios"; 
-import { FaTrash } from "react-icons/fa";
 
 const SearchRoute = () => {
 
@@ -12,7 +11,7 @@ const SearchRoute = () => {
     const [allStations, setAllStations] = useState([]);
     const [isLoading, setIsLoading] = useState(false); 
     const [error, setError] = useState(null);
-    const [searchResults, setSearchResults] = useState(null);
+    const [searchResults, setSearchResults] = useState();
         const [hoveredRow, setHoveredRow] = useState(null);
 
     useEffect(() => {
@@ -74,9 +73,41 @@ const SearchRoute = () => {
                 },
             });
             if (response.data && response.data.length > 0) {
-                setSearchResults(response.data);
+                const routes = response.data;
+                setSearchResults(routes);
+
+                const seatRequests = routes.map(async (route) => {
+                    const seatStatusDTO = {
+                        trainId: route.trainDTO.id,               
+                        routeId: route.id,                        
+                        departureStationId: route.departureCityId, 
+                        arrivalStationId: route.arrivalCityId      
+                    };
+    
+                    const seatResponse = await axios.post("http://localhost:8080/train/seats/seatWithStatus",seatStatusDTO, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json",
+                        },
+                        data: seatStatusDTO, 
+                    });
+    
+                    return {
+                        routeId: route.id,
+                        freeSeats: seatResponse.data.freeSeats,
+                    };
+                });
+    
+                const seatStatuses = await Promise.all(seatRequests);
+    
+                const updatedRoutes = routes.map(route => {
+                    const seatData = seatStatuses.find(s => s.routeId === route.id);
+                    return { ...route, freeSeats: seatData ? seatData.freeSeats : 0 };
+                });
+    
+                setSearchResults(updatedRoutes);
             } else {
-                setSearchResults(null); 
+                setSearchResults(); 
             }
             console.log("Найденные маршруты:", response.data);
         } catch (error) {
@@ -167,6 +198,7 @@ const SearchRoute = () => {
                                         <th>Отбытие</th>
                                         <th>Продолжительность</th>
                                         <th>Стоимость</th>
+                                        <th>Свободные места</th>
                                     </tr>
                                 </thead>   
                                 <tbody>
@@ -184,8 +216,9 @@ const SearchRoute = () => {
                                             <td>{new Date(searchResults?.[0]?.departureDateTime)
                                                 .toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" }) || "Нет данных"}
                                             </td>
-                                                <td>{searchResults?.[0]?.timeRoad || "Нет данных"}</td>
-                                                <td>{route.price}</td>
+                                            <td>{searchResults?.[0]?.timeRoad || "Нет данных"}</td>
+                                            <td>{route.price} BYN</td>
+                                            <td>{route.freeSeats}</td>
                                         </tr>
                                     ))}
                                 </tbody>
