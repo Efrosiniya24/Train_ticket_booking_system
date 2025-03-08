@@ -14,6 +14,9 @@ public interface RouteStationTimeMapper {
     RouteStationTimeDto toRouteStationTimeDTO(RouteStationTimeEntity routeStationTimeEntity);
 
     List<RouteStationTimeEntity> toRouteStationTimeEntityList(List<RouteStationTimeDto> routeStationTimeDTOList);
+
+    @Mapping(target = "stationDTO", source = "station")
+    List<RouteStationTimeDto> toRouteStationTimeDtoList(List<RouteStationTimeEntity> routeStationTimeEntityList);
 }
 
 
