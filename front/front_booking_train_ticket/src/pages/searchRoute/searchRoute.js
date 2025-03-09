@@ -123,7 +123,15 @@ const SearchRoute = () => {
     };
     
     const handleChooseSeats = (route) => {
-        navigate("/chooseSeats", { state: { routeData: route } });
+        const departureStationObj = allStations.find(station => station.name === stations[0].departureStation);
+        const arrivalStationObj = allStations.find(station => station.name === stations[0].arrivalStation);
+        navigate("/chooseSeats", { 
+            state: { 
+                routeData: route,
+                departureStation: departureStationObj,
+                arrivalStation: arrivalStationObj
+            } 
+        });
     };
 
     return ( 
