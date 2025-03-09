@@ -4,6 +4,8 @@ import commonStyle from "../styles/forAllPAges.module.css";
 import Header from "../../components/headerMain/headerMain";
 import { useEffect, useState } from "react"; 
 import axios from "axios"; 
+import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const SearchRoute = () => {
 
@@ -12,7 +14,8 @@ const SearchRoute = () => {
     const [isLoading, setIsLoading] = useState(false); 
     const [error, setError] = useState(null);
     const [searchResults, setSearchResults] = useState();
-        const [hoveredRow, setHoveredRow] = useState(null);
+    const [hoveredRow, setHoveredRow] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -79,11 +82,11 @@ const SearchRoute = () => {
                 const seatRequests = routes.map(async (route) => {
                     const seatStatusDTO = {
                         trainId: route.trainDTO.id,               
-                        routeId: route.id,                        
-                        departureStationId: route.departureCityId, 
-                        arrivalStationId: route.arrivalCityId      
+                        routeId: route.routeDTO.id,                        
+                        departureStationId: departureStationObj.id,
+                        arrivalStationId: arrivalStationObj.id,    
                     };
-    
+
                     const seatResponse = await axios.post("http://localhost:8080/train/seats/seatWithStatus",seatStatusDTO, {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -91,18 +94,22 @@ const SearchRoute = () => {
                         },
                         data: seatStatusDTO, 
                     });
-    
                     return {
                         routeId: route.id,
                         freeSeats: seatResponse.data.freeSeats,
+                        coachDtos: seatResponse.data.coachDtos 
                     };
                 });
     
                 const seatStatuses = await Promise.all(seatRequests);
-    
+
                 const updatedRoutes = routes.map(route => {
                     const seatData = seatStatuses.find(s => s.routeId === route.id);
-                    return { ...route, freeSeats: seatData ? seatData.freeSeats : 0 };
+                    return { 
+                        ...route, 
+                        freeSeats: seatData ? seatData.freeSeats : 0,
+                        coachDtos: seatData ? seatData.coachDtos : {} 
+                    };
                 });
     
                 setSearchResults(updatedRoutes);
@@ -115,6 +122,9 @@ const SearchRoute = () => {
         }
     };
     
+    const handleChooseSeats = (route) => {
+        navigate("/chooseSeats", { state: { routeData: route } });
+    };
 
     return ( 
         <div>
@@ -218,18 +228,19 @@ const SearchRoute = () => {
                                             </td>
                                             <td>{searchResults?.[0]?.timeRoad || "Нет данных"}</td>
                                             <td>{route.price} BYN</td>
-                                            <td>{route.freeSeats}
-                                                {route.freeSeats > 0 && <button className={style.chooseSeat}>Выбрать место</button>}
+                                            <td>
+                                                <NavLink to="/chooseSeats" state={{ routeData: route }}>
+                                                    <button className={style.chooseSeat} onClick={() => handleChooseSeats(route)}>
+                                                        Выбрать место
+                                                    </button>
+                                                </NavLink>
                                             </td>
                                         </tr>
                                     ))}
                                 </tbody>
                             </table>
-
                         </div>
                     )}
-
-
                 </div>
             </div>
         </div>
