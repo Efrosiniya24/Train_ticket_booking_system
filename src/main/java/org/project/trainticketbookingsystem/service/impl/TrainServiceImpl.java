@@ -38,33 +38,28 @@ public class TrainServiceImpl implements TrainService {
 
     @Override
     public TrainDto getTrainById(Long trainId) {
-        TrainEntity trainEntity = getTrainEntityById(trainId);
+        TrainEntity trainEntity = trainRepository.findById(trainId).orElseThrow(() -> new TrainException("Train not found"));
         return trainMapper.toTrainDTO(trainEntity);
     }
 
     @Override
     public int getNumberOfSeats(Long trainId) {
-        TrainEntity trainEntity = getTrainEntityById(trainId);
+        TrainEntity trainEntity = trainMapper.toTrainEntity(getTrainById(trainId));
         return trainEntity.getCoachEntities().stream()
                 .mapToInt(coach -> coach.getSeats().size())
                 .sum();
     }
 
     @Override
-    public TrainEntity getTrainEntityById(Long id) {
-        return trainRepository.findById(id).orElseThrow(() -> new TrainException("Train not found"));
-    }
-
-    @Override
     public void deleteTrainById(Long trainId) {
-        TrainEntity train = getTrainEntityById(trainId);
+        TrainEntity train = trainMapper.toTrainEntity(getTrainById(trainId));
         coachService.deleteCoach(train.getCoachEntities());
         trainRepository.delete(train);
     }
 
     @Override
     public TrainDto updateTrain(Long trainId, TrainDto trainDTO) {
-        TrainEntity trainEntity = getTrainEntityById(trainId);
+        TrainEntity trainEntity = trainMapper.toTrainEntity(getTrainById(trainId));
 
         trainEntity.setId(trainId);
         trainEntity.setTrain(trainDTO.getTrain());
