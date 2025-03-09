@@ -43,7 +43,8 @@ public class SecurityConfig {
                                 "/train/update/**")
                         .hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.POST,
-                                "/train/booking")
+                                "/train/booking",
+                                "/train/getBooking")
                         .hasAuthority("USER")
                         .anyRequest().permitAll())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

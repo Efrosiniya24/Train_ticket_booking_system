@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.project.trainticketbookingsystem.config.UserDetailsImpl;
 import org.project.trainticketbookingsystem.dto.BookingDto;
+import org.project.trainticketbookingsystem.dto.BookingRequestDto;
 import org.project.trainticketbookingsystem.dto.RouteStationTimeDto;
 import org.project.trainticketbookingsystem.entity.BookingEntity;
 import org.project.trainticketbookingsystem.entity.SeatEntity;
@@ -67,5 +68,12 @@ public class BookingServiceImpl implements BookingService {
                 .build();
 
         return bookingMapper.toBookingDTO(bookingRepository.save(booking));
+    }
+
+    @Override
+    public List<BookingRequestDto> getBookingForCurrentUser(UserDetails userDetails) {
+        Long userId = ((UserDetailsImpl) userDetails).getId();
+        List<BookingEntity> bookingEntities = bookingRepository.findAllByUserId(userId);
+        return bookingMapper.toBookingRequestDTO(bookingEntities);
     }
 }

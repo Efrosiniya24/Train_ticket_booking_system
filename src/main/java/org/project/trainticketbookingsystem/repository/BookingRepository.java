@@ -9,5 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
     List<BookingEntity> findByTrainIdAndRouteIdAndArrivalDate(Long trainId, Long routeId, LocalDate arrivalDate);
+
+    List<BookingEntity> findAllByUserId(Long userId);
 }
 
