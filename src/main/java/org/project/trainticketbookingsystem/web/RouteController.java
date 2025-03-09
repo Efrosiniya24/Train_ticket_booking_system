@@ -28,7 +28,7 @@ public class RouteController {
     @PostMapping("/create")
     public ResponseEntity<RouteDto> createRoute(@RequestBody RouteDto routeDto) {
         RouteDto createdRoutDto = routeService.createRoute(routeDto);
-        return ResponseEntity.ok().body(createdRoutDto);
+        return ResponseEntity.ok(createdRoutDto);
     }
 
     @GetMapping("/allRoutes")
