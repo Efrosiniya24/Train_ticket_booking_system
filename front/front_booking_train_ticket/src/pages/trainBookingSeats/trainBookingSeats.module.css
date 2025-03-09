@@ -1,0 +1,48 @@
+.container{
+    display: flex;
+    align-items:flex-start;
+    flex-direction: row;
+}
+
+.coachesButtons{
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.coachesButtons button {
+    padding: 7px;
+    width: 100px;
+    border-radius: 10px;
+    background-color: #BDD1D4;
+    cursor: pointer;
+    border:none;
+    font-weight: bold;
+}
+
+.coachesButtons button:hover{
+    transform: scale(1.03);
+    transition: transform 0.1s ease; 
+    background-color: #bdd1d4ca;
+}
+
+.train{
+    width: 700px;
+    height: auto;
+}
+
+.train h2{
+    font-size: 30px;
+}
+
+.coach{
+    display: flex;
+    width: 600px;
+    height: 200px;
+    background-color: rgb(240, 240, 240);
+    border-radius: 30px;
+    margin-top: 15px;
+    padding: 20px;
+    gap: 10px;
+    box-shadow: 4px 0px 15px -1px rgba(0, 0, 0, 0.05);
+}
