@@ -9,4 +9,8 @@ public interface BookingService {
     BookingDto bookTicket(BookingDto bookingDTO, UserDetails user);
 
     List<BookingRequestDto> getBookingForCurrentUser(UserDetails userDetails);
+
+    void cancelBooking(Long id);
+
+    BookingRequestDto findBookingById(Long id);
 }

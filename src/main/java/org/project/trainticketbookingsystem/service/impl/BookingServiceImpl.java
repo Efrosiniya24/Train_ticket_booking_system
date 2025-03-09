@@ -1,5 +1,7 @@
 package org.project.trainticketbookingsystem.service.impl;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,7 @@ import org.project.trainticketbookingsystem.entity.BookingEntity;
 import org.project.trainticketbookingsystem.entity.SeatEntity;
 import org.project.trainticketbookingsystem.entity.TrainEntity;
 import org.project.trainticketbookingsystem.entity.UserEntity;
+import org.project.trainticketbookingsystem.exceptions.BookingException;
 import org.project.trainticketbookingsystem.mapper.BookingMapper;
 import org.project.trainticketbookingsystem.mapper.RouteMapper;
 import org.project.trainticketbookingsystem.mapper.SeatMapper;
@@ -75,5 +78,19 @@ public class BookingServiceImpl implements BookingService {
         Long userId = ((UserDetailsImpl) userDetails).getId();
         List<BookingEntity> bookingEntities = bookingRepository.findAllByUserId(userId);
         return bookingMapper.toBookingRequestDTO(bookingEntities);
+    }
+
+    @Override
+    public void cancelBooking(Long id) {
+        BookingRequestDto booking = findBookingById(id);
+        if (ChronoUnit.DAYS.between(LocalDate.now(), booking.getTravelDate()) >= 1)
+            bookingRepository.deleteById(id);
+        else throw new BookingException("Сancellation of the booking is not possible");
+    }
+
+    @Override
+    public BookingRequestDto findBookingById(Long id) {
+        BookingEntity bookingEntity = bookingRepository.findById(id).orElseThrow(() -> new BookingException("Booking is not found"));
+        return bookingMapper.toBookingRequestDTO(bookingEntity);
     }
 }

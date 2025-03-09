@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,5 +39,12 @@ public class BookingController {
     public ResponseEntity<List<BookingRequestDto>> getBookingForCurrentUSer(@AuthenticationPrincipal UserDetails userDetails) {
         List<BookingRequestDto> bookingDtos = bookingService.getBookingForCurrentUser(userDetails);
         return ResponseEntity.ok(bookingDtos);
+    }
+
+    @PreAuthorize("hasAuthority('USER')")
+    @DeleteMapping("/cancelBooking/{id}")
+    public ResponseEntity<String> cancelBooking(@PathVariable Long id) {
+        bookingService.cancelBooking(id);
+        return ResponseEntity.ok("Booking cancelled");
     }
 }
