@@ -37,6 +37,23 @@ const UsersBooking = () => {
         });
     };
 
+    const cancelBooking = async (bookingId) => {
+        if (!window.confirm("Вы уверены, что хотите отменить бронирование?")) return;
+
+        try {
+            const token = localStorage.getItem("accessToken");
+            await axios.delete(`http://localhost:8080/train/cancelBooking/${bookingId}`, {
+                headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+            });
+
+            setBookings(bookings.filter((booking) => booking.bookingId !== bookingId));
+
+            alert("Бронирование успешно отменено");
+        } catch (error) {
+            console.error("Ошибка отмены бронирования:", error);
+            alert("Не удалось отменить бронирование");
+        }
+    };
     return ( 
         <div className={userStyle.page}>
             <Header/>
@@ -51,9 +68,9 @@ const UsersBooking = () => {
                                 <th>Отправление</th>
                                 <th>Прибытие</th>
                                 <th>Поезд</th>
-                                <th>Продолжительность</th>
                                 <th>Стоимость</th>
                                 <th>Места</th>
+                                <th></th>
                             </tr>
                         </thead>   
                         <tbody>
@@ -74,6 +91,14 @@ const UsersBooking = () => {
                             <td>{booking.train.train}</td>
                             <td>{booking.seatsList[0].price} BYN</td>
                             <td>{booking.seatsList.map((seat) => seat.number).join(", ")}</td>
+                            <td>
+                                <button 
+                                    className={style.cancelBooking} 
+                                    onClick={() => cancelBooking(booking.bookingId)}
+                                >
+                                    Отменить бронирование
+                                </button>                            
+                            </td>
                         </tr>
                     ))}
                         </tbody>
