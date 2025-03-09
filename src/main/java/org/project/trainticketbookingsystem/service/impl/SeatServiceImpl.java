@@ -40,7 +40,7 @@ public class SeatServiceImpl implements SeatService {
     public List<SeatEntity> updateSeats(List<SeatDto> seats) {
         List<SeatEntity> seatEntities = seats.stream()
                 .map(seatDTO -> {
-                    SeatEntity seatEntity = seatRepository.findById(seatDTO.getId()).orElseThrow(() -> new SeatException("Seat not found"));
+                    SeatEntity seatEntity = getSeatById(seatDTO.getId());
                     seatEntity.setPrice(seatDTO.getPrice());
                     seatEntity.setId(seatDTO.getId());
                     return seatEntity;
