@@ -45,6 +45,7 @@ public class CoachServiceImpl implements CoachService {
     @Override
     public void deleteCoach(List<CoachEntity> coachEntities) {
         for (CoachEntity coachEntity : coachEntities) {
+            getCoach(coachEntity.getId());
             seatService.deleteSeat(coachEntity.getSeats());
         }
 
@@ -55,7 +56,7 @@ public class CoachServiceImpl implements CoachService {
     public List<CoachEntity> update(List<CoachDto> coachDtoList) {
         List<CoachEntity> coachEntities = coachDtoList.stream()
                 .map(coachDTO -> {
-                    CoachEntity coachEntity = coachRepository.findById(coachDTO.getId()).orElseThrow(() -> new CoachException("Coach not found"));
+                    CoachEntity coachEntity = coachMapper.toCoachEntity(getCoach(coachDTO.getId()));
                     coachEntity.setId(coachDTO.getId());
                     coachEntity.setNumber(coachDTO.getNumber());
                     coachEntity.setNumberOfSeats(coachDTO.getNumberOfSeats());
@@ -72,5 +73,11 @@ public class CoachServiceImpl implements CoachService {
     public List<CoachDto> getCoachList(Long trainId) {
         List<CoachEntity> coaches = coachRepository.findByTrain_Id(trainId);
         return coachMapper.toCoachDTO(coaches);
+    }
+
+    @Override
+    public CoachDto getCoach(Long coachId) {
+        CoachEntity coachEntity = coachRepository.findById(coachId).orElseThrow(() -> new CoachException("Coach not found"));
+        return coachMapper.toCoachDTO(coachEntity);
     }
 }

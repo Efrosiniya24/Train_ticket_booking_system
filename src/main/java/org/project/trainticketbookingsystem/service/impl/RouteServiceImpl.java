@@ -11,7 +11,6 @@ import org.project.trainticketbookingsystem.dto.RouteStationTimeDto;
 import org.project.trainticketbookingsystem.dto.SearchTicketDto;
 import org.project.trainticketbookingsystem.dto.SegmentDto;
 import org.project.trainticketbookingsystem.dto.StationDto;
-import org.project.trainticketbookingsystem.dto.TrainDto;
 import org.project.trainticketbookingsystem.entity.RouteEntity;
 import org.project.trainticketbookingsystem.entity.RouteStationTimeEntity;
 import org.project.trainticketbookingsystem.entity.TrainEntity;
@@ -128,18 +127,7 @@ public class RouteServiceImpl implements RouteService {
     public RouteDto getRouteById(Long id) {
         RouteEntity routeEntity = routeRepository.findById(id)
                 .orElseThrow(() -> new RouteException("Route not found"));
-
-        List<RouteStationTimeDto> routeStationTimeDtoList = routeEntity.getRouteStationTime().stream()
-                .map(routeStationTime -> {
-                    RouteStationTimeDto routeStationTimeDTO = routeStationTimeMapper.toRouteStationTimeDTO(routeStationTime);
-                    routeStationTimeDTO.setStationDTO(stationMapper.toStationDTO(routeStationTime.getStation()));
-                    return routeStationTimeDTO;
-                })
-                .collect(Collectors.toList());
-
-        TrainDto trainDTO = trainService.getTrainById(routeEntity.getTrain().getId());
-
-        return routeMapper.toRouteDTO(routeEntity.getId(), trainDTO, routeStationTimeDtoList);
+        return routeMapper.toRouteDTO(routeEntity);
     }
 
     @Override
