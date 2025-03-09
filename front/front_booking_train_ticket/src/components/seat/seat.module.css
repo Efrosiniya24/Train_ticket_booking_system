@@ -1,0 +1,33 @@
+.seat {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: lightgrey;
+    border-radius: 15px;
+}
+
+.freeSeat {
+    background-color: rgb(166, 206, 166);
+}
+
+.bookedSeat {
+    background-color: rgb(232, 171, 171);
+}
+
+.seatNumber {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.freeSeat:hover{
+    transform: scale(1.03);
+    transition: transform 0.1s ease; 
+    background-color: rgba(185, 185, 185, 0.611);
+    cursor: pointer;
+}
+
+.selectedSeat {
+    background-color:rgb(185, 185, 185) !important; 
+}
