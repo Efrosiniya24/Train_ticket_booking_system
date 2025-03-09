@@ -9,7 +9,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -53,7 +53,8 @@ public class BookingEntity {
     @JoinColumn(name = "arrival_station_id")
     private StationEntity arrivalStation;
 
-    private LocalDate arrivalDate;
+    private LocalDateTime arrivalDateTime;
+    private LocalDateTime departureDateTime;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

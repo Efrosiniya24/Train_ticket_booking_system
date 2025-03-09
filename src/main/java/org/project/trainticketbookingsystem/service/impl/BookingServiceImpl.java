@@ -66,7 +66,8 @@ public class BookingServiceImpl implements BookingService {
                 .route(routeMapper.toRouteEntity(stations.get("departureStation").getRouteDTO()))
                 .departureStation(stationMapper.toStationEntity(stations.get("departureStation").getStationDTO()))
                 .arrivalStation(stationMapper.toStationEntity(stations.get("arrivalStation").getStationDTO()))
-                .arrivalDate(bookingDTO.getTravelDate())
+                .arrivalDateTime(stations.get("arrivalStation").getArrivalDate())
+                .departureDateTime(stations.get("departureStation").getDepartureDate())
                 .user(userEntity)
                 .build();
 

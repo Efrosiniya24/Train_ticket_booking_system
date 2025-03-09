@@ -1,6 +1,7 @@
 package org.project.trainticketbookingsystem.dto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Data;
 
@@ -13,4 +14,6 @@ public class BookingRequestDto {
     private StationDto departureStation;
     private StationDto arrivalStation;
     private LocalDate travelDate;
+    private LocalDateTime departureDataTime;
+    private LocalDateTime arrivalDataTime;
 }

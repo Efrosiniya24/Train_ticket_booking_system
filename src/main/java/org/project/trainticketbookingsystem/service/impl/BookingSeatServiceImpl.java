@@ -44,7 +44,7 @@ public class BookingSeatServiceImpl implements BookingSeatService {
                 .map(SeatEntity::getId)
                 .collect(Collectors.toList());
 
-        List<BookingEntity> allBookings = bookingRepository.findByTrainIdAndRouteIdAndArrivalDate(
+        List<BookingEntity> allBookings = bookingRepository.findByParam(
                 bookingDto.getTrainId(),
                 bookingDto.getRouteId(),
                 bookingDto.getTravelDate()
