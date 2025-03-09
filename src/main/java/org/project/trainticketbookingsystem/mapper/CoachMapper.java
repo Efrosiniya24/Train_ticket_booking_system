@@ -12,4 +12,7 @@ public interface CoachMapper {
     CoachDto toCoachDTO(CoachEntity coachEntity);
 
     List<CoachDto> toCoachDTO(List<CoachEntity> coachEntities);
+
+    @Mapping(source = "seats", target = "seats")
+    CoachEntity toCoachEntity(CoachDto coachDto);
 }

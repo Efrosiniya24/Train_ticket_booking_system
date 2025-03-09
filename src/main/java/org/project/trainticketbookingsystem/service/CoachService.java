@@ -15,4 +15,6 @@ public interface CoachService {
     List<CoachEntity> update(List<CoachDto> coachDtoList);
 
     List<CoachDto> getCoachList(Long trainId);
+
+    CoachDto getCoach(Long coachId);
 }
