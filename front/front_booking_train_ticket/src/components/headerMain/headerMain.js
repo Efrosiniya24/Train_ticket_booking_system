@@ -9,7 +9,7 @@ const HeaderMain = () => {
             <div className={header.nav}>
                 <p className={header.logo}>Train</p>
                 <ul>
-                    <li>Билеты</li>
+                    <NavLink to="/searchRoute"><li>Билеты</li></NavLink>
                     <NavLink to="/usersBooking"><li>Личный кабинет</li></NavLink>
                 </ul>
             </div>
