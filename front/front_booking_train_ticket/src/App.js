@@ -8,6 +8,7 @@ import { AuthProvider } from './components/AuthProvider';
 import Train from './pages/train/train';
 import SearchRoute from './pages/searchRoute/searchRoute';
 import TrainBookingSeats from './pages/trainBookingSeats/trainBookingSeats';
+import UsersBooking from './pages/usersBooking/usersBooking';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/train" element={<Train/>}></Route>
           <Route path="/searchRoute" element={<SearchRoute/>}></Route>
           <Route path="/chooseSeats" element={<TrainBookingSeats/>}></Route>
+          <Route path="/usersBooking" element={<UsersBooking/>}></Route>
         </Routes>
       </Router>
     </AuthProvider>

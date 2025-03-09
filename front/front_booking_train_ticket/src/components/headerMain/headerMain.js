@@ -10,7 +10,7 @@ const HeaderMain = () => {
                 <p className={header.logo}>Train</p>
                 <ul>
                     <li>Билеты</li>
-                    <li>Личный кабинет</li>
+                    <NavLink to="/usersBooking"><li>Личный кабинет</li></NavLink>
                 </ul>
             </div>
         </header>
