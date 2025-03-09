@@ -5,7 +5,7 @@ import org.project.trainticketbookingsystem.dto.GetSeatStatusDto;
 import org.project.trainticketbookingsystem.dto.SeatStatusDtoResponse;
 import org.project.trainticketbookingsystem.service.BookingSeatService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SeatController {
     private final BookingSeatService bookingSeatService;
 
-    @GetMapping("/seatWithStatus")
+    @PostMapping("/seatWithStatus")
     public ResponseEntity<SeatStatusDtoResponse> getSeatsWithStatus(@RequestBody GetSeatStatusDto statusDto) {
         return ResponseEntity.ok(bookingSeatService.getSeatsWithStatusForSegment(statusDto));
     }
