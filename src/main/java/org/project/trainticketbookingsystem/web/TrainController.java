@@ -36,17 +36,16 @@ public class TrainController {
 
     @GetMapping("/numberOfSeats/{id}")
     public ResponseEntity<Integer> getNumberOfSeats(@PathVariable Long id) {
-        int numberOfSeats;
-        numberOfSeats = trainService.getNumberOfSeats(id);
+        int numberOfSeats = trainService.getNumberOfSeats(id);
         return ResponseEntity.ok(numberOfSeats);
 
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteTrain(@PathVariable Long id) {
+    public ResponseEntity<String> deleteTrain(@PathVariable Long id) {
         trainService.deleteTrainById(id);
-        return ResponseEntity.ok().body(null);
+        return ResponseEntity.ok().body("Train successfully deleted");
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
