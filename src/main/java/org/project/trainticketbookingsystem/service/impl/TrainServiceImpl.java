@@ -1,7 +1,6 @@
 package org.project.trainticketbookingsystem.service.impl;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.project.trainticketbookingsystem.dto.TrainDto;
 import org.project.trainticketbookingsystem.entity.TrainEntity;
@@ -34,9 +33,7 @@ public class TrainServiceImpl implements TrainService {
 
     @Override
     public List<TrainDto> getAllTrains() {
-        return trainRepository.findAll().stream()
-                .map(trainMapper::toTrainDTO)
-                .collect(Collectors.toList());
+        return trainMapper.toTrainDTOList(trainRepository.findAll());
     }
 
     @Override
