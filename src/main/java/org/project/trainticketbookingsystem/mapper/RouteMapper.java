@@ -1,7 +1,6 @@
 package org.project.trainticketbookingsystem.mapper;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.project.trainticketbookingsystem.dto.RouteDto;
@@ -14,11 +13,7 @@ public interface RouteMapper {
     @Mapping(target = "train", source = "train")
     RouteDto toRouteDTO(RouteEntity routeEntity);
 
-    default List<RouteDto> toRouteDTOList(List<RouteEntity> routeEntities) {
-        return routeEntities.stream()
-                .map(this::toRouteDTO)
-                .collect(Collectors.toList());
-    }
+    List<RouteDto> toRouteDTOList(List<RouteEntity> routeEntities);
 
     RouteEntity toRouteEntity(RouteDto routeDto);
 }
