@@ -19,6 +19,7 @@ import org.project.trainticketbookingsystem.mapper.BookingMapper;
 import org.project.trainticketbookingsystem.mapper.RouteMapper;
 import org.project.trainticketbookingsystem.mapper.SeatMapper;
 import org.project.trainticketbookingsystem.mapper.StationMapper;
+import org.project.trainticketbookingsystem.mapper.TrainMapper;
 import org.project.trainticketbookingsystem.repository.BookingRepository;
 import org.project.trainticketbookingsystem.service.BookingSeatService;
 import org.project.trainticketbookingsystem.service.BookingService;
@@ -42,6 +43,7 @@ public class BookingServiceImpl implements BookingService {
     private final BookingSeatService bookingSeatService;
     private final RouteMapper routeMapper;
     private final StationMapper stationMapper;
+    private final TrainMapper trainMapper;
 
     @Override
     public BookingDto bookTicket(BookingDto bookingDTO, UserDetails user) {
@@ -57,7 +59,7 @@ public class BookingServiceImpl implements BookingService {
 
         List<SeatEntity> seatEntities = seatMapper.toSeatEntity(bookingSeatService.getSeatBooking(bookingDTO, stations));
 
-        TrainEntity train = trainService.getTrainEntityById(bookingDTO.getTrainId());
+        TrainEntity train = trainMapper.toTrainEntity(trainService.getTrainById(bookingDTO.getTrainId()));
         UserEntity userEntity = userService.findById(userId);
 
         BookingEntity booking = BookingEntity.builder()

@@ -18,6 +18,7 @@ import org.project.trainticketbookingsystem.exceptions.RouteException;
 import org.project.trainticketbookingsystem.mapper.RouteMapper;
 import org.project.trainticketbookingsystem.mapper.RouteStationTimeMapper;
 import org.project.trainticketbookingsystem.mapper.StationMapper;
+import org.project.trainticketbookingsystem.mapper.TrainMapper;
 import org.project.trainticketbookingsystem.repository.RouteRepository;
 import org.project.trainticketbookingsystem.service.RouteService;
 import org.project.trainticketbookingsystem.service.RouteStationTimeService;
@@ -38,11 +39,12 @@ public class RouteServiceImpl implements RouteService {
     private final TrainService trainService;
     private final RouteMapper routeMapper;
     private final SeatService seatService;
+    private final TrainMapper trainMapper;
 
     @Transactional
     @Override
     public RouteDto createRoute(RouteDto routeDTO) {
-        TrainEntity train = trainService.getTrainEntityById(routeDTO.getTrain().getId());
+        TrainEntity train = trainMapper.toTrainEntity(trainService.getTrainById(routeDTO.getTrain().getId()));
 
         RouteEntity routeEntity = RouteEntity.builder()
                 .train(train)
@@ -141,7 +143,7 @@ public class RouteServiceImpl implements RouteService {
         RouteEntity routeEntity = routeRepository.findById(id)
                 .orElseThrow(() -> new RouteException("Route is not found"));
 
-        TrainEntity train = trainService.getTrainEntityById(routeDTO.getTrain().getId());
+        TrainEntity train = trainMapper.toTrainEntity(trainService.getTrainById(routeDTO.getTrain().getId()));
         routeEntity.setTrain(train);
 
         List<RouteStationTimeEntity> updatedStations = stationTimeService.update(routeDTO.getRouteStationTimeDTO(), routeEntity);
