@@ -7,6 +7,7 @@ import org.project.trainticketbookingsystem.dto.ResponseDto;
 import org.project.trainticketbookingsystem.dto.SignInRequestDto;
 import org.project.trainticketbookingsystem.dto.SignUpRequestDto;
 import org.project.trainticketbookingsystem.entity.UserEntity;
+import org.project.trainticketbookingsystem.enums.Role;
 import org.project.trainticketbookingsystem.exceptions.UserException;
 import org.project.trainticketbookingsystem.repository.UserRepository;
 import org.project.trainticketbookingsystem.service.AuthenticationService;
@@ -28,6 +29,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public ResponseDto signUp(SignUpRequestDto requestDTO) {
+        Role role = requestDTO.getRole() != null ? requestDTO.getRole() : Role.USER;
         UserEntity user = UserEntity
                 .builder()
                 .name(requestDTO.getName())
@@ -35,7 +37,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .patronymic(requestDTO.getPatronymic())
                 .email(requestDTO.getEmail())
                 .password(passwordEncoder.encode(requestDTO.getPassword()))
-                .role(requestDTO.getRole())
+                .role(role)
                 .build();
         userRepository.save(user);
 
