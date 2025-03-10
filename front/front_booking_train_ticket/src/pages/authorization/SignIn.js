@@ -13,6 +13,9 @@ const SignIn = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
+//       localStorage.removeItem("accessToken");
+// sessionStorage.removeItem("accessToken");
+
       const response = await axiosInstance.post("/train/auth/signIn", { email, password });
 
       console.log("Server Response:", response.data);
@@ -35,7 +38,7 @@ const SignIn = () => {
 
       switch (role) {
         case "USER":
-          navigate("/tours");
+          navigate("/searchRoute");
           break;
         case "ADMIN":
           navigate("/route");
