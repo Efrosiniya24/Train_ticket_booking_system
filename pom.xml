@@ -25,6 +25,9 @@
         <mockito.version>5.16.0</mockito.version>
         <junit.version>5.12.0</junit.version>
         <surefire.version>3.0.0-M5</surefire.version>
+        <jakarta-validation.version>3.1.1</jakarta-validation.version>
+        <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
+
     </properties>
 
     <dependencies>
@@ -127,6 +130,20 @@
             <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>${jakarta-validation.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${hibernate-validator.version}</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>

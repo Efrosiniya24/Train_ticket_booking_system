@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,6 +29,8 @@ public class TrainEntity {
     private Long id;
 
     private String train;
+
+    @Min(1)
     private int numberOfCoaches;
 
     @OneToMany(mappedBy = "train")
