@@ -9,6 +9,7 @@ import org.project.trainticketbookingsystem.entity.TrainEntity;
 @Mapper(componentModel = "spring", uses = CoachMapper.class)
 public interface TrainMapper {
     @Mapping(source = "coachEntities", target = "coachDtoList")
+    @Mapping(source = "numberOfCoaches", target = "numberOfCoaches")
     TrainDto toTrainDTO(TrainEntity trainEntity);
 
     List<TrainDto> toTrainDTOList(List<TrainEntity> trainEntities);

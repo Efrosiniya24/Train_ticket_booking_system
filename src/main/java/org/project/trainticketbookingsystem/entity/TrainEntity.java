@@ -28,6 +28,7 @@ public class TrainEntity {
     private Long id;
 
     private String train;
+    private int numberOfCoaches;
 
     @OneToMany(mappedBy = "train")
     private List<RouteEntity> routes;

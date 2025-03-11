@@ -10,4 +10,5 @@ public class TrainDto {
     private Long id;
     private String train;
     private List<CoachDto> coachDtoList;
+    private int numberOfCoaches;
 }

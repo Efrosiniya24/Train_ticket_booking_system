@@ -64,6 +64,7 @@ public class TrainServiceImpl implements TrainService {
         trainEntity.setId(trainId);
         trainEntity.setTrain(trainDTO.getTrain());
         trainEntity.setCoachEntities(coachService.update(trainDTO.getCoachDtoList()));
+        trainEntity.setNumberOfCoaches(trainDTO.getNumberOfCoaches());
 
         trainRepository.save(trainEntity);
         return trainMapper.toTrainDTO(trainEntity);
