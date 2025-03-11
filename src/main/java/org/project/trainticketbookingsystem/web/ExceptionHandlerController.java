@@ -1,5 +1,6 @@
 package org.project.trainticketbookingsystem.web;
 
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.project.trainticketbookingsystem.exceptions.BookingException;
 import org.project.trainticketbookingsystem.exceptions.CoachException;
@@ -65,4 +66,10 @@ public class ExceptionHandlerController {
         log.error(e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Ошибка валидации данных");
+    }
+
 }
