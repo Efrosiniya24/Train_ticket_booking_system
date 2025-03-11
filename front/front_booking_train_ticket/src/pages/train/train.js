@@ -81,9 +81,9 @@ const Train = () => {
             return;
         }
     
-        const trainDTO = {
+        const trainDto = {
             train: trainName,
-            coachDTOList: seatsPerCoach.map((seats, index) => ({
+            coachDtoList: seatsPerCoach.map((seats, index) => ({
                 number: index + 1,
                 numberOfSeats: parseInt(seats) || 0,
                 seats: new Array(parseInt(seats) || 0).fill(null).map((_, seatIndex) => ({
@@ -95,7 +95,7 @@ const Train = () => {
     
         try {
             const token = localStorage.getItem("accessToken");
-            await axios.post("http://localhost:8080/train/addTrain", trainDTO, {
+            await axios.post("http://localhost:8080/train/addTrain", trainDto, {
                 headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
             });
     
@@ -137,15 +137,15 @@ const Train = () => {
             return;
         }
     
-        const trainDTO = {
+        const trainDto = {
             id: selectedTrain,
             train: trainName,
-            coachDTOList: seatsPerCoach.map((seats, index) => ({
-                id: selectedTrain ? trains.find(t => t.id === selectedTrain)?.coachDTOList[index]?.id || null : null,
+            coachDtoList: seatsPerCoach.map((seats, index) => ({
+                id: selectedTrain ? trains.find(t => t.id === selectedTrain)?.coachDtoList[index]?.id || null : null,
                 number: index + 1,
                 numberOfSeats: parseInt(seats) || 0,
                 seats: new Array(parseInt(seats) || 0).fill(null).map((_, seatIndex) => ({
-                    id: selectedTrain ? trains.find(t => t.id === selectedTrain)?.coachDTOList[index]?.seats[seatIndex]?.id || null : null,
+                    id: selectedTrain ? trains.find(t => t.id === selectedTrain)?.coachDtoList[index]?.seats[seatIndex]?.id || null : null,
                     number: seatIndex + 1,
                     price: parseFloat(seatPrice) || 0 
                 }))
@@ -154,7 +154,7 @@ const Train = () => {
     
         try {
             const token = localStorage.getItem("accessToken");
-            await axios.put(`http://localhost:8080/train/update/${selectedTrain}`, trainDTO, {
+            await axios.put(`http://localhost:8080/train/update/${selectedTrain}`, trainDto, {
                 headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
             });
     
