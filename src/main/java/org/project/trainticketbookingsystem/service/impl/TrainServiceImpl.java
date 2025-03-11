@@ -10,6 +10,7 @@ import org.project.trainticketbookingsystem.repository.TrainRepository;
 import org.project.trainticketbookingsystem.service.CoachService;
 import org.project.trainticketbookingsystem.service.TrainService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +20,7 @@ public class TrainServiceImpl implements TrainService {
     private final TrainMapper trainMapper;
     private final CoachService coachService;
 
+    @Transactional
     @Override
     public TrainDto addTrain(TrainDto train) {
         TrainEntity trainEntity = trainMapper.toTrainEntity(train);
