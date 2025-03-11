@@ -3,15 +3,12 @@ import axios from "axios";
 import SideBarAdmin from "../../components/sideBar/sideBar";  
 import style from "./train.module.css";
 import commonStyle from "../styles/forAllPAges.module.css";
-import Add from "../../components/add_plus/add";
 import { FaTrash } from "react-icons/fa"; 
 
 const Train = () => {
     const [isAddVisible, setIsAddVisible] = useState(false);
     const [trains, setTrains] = useState([]);
     const [selectedTrain, setSelectedTrain] = useState("");
-    const [isLoading, setIsLoading] = useState(false); 
-    const [error, setError] = useState(null);
     const [trainName, setTrainName] = useState("");
     const [numberOfCoaches, setNumberOfCoaches] = useState("");
     const [seatsPerCoach, setSeatsPerCoach] = useState([]);
@@ -43,17 +40,16 @@ const Train = () => {
         setIsAddVisible(true);
         
         setTrainName(train.train);
-        setNumberOfCoaches(train.coachDTOList.length.toString());
-        const seatsArray = train.coachDTOList.map(coach => coach.numberOfSeats.toString());
+        setNumberOfCoaches(train.numberOfCoaches);
+        const seatsArray = train.coachDtoList.map(coach => coach.numberOfSeats.toString());
         setSeatsPerCoach(seatsArray);
-        if (train.coachDTOList.length > 0 && train.coachDTOList[0].seats.length > 0) {
-            setSeatPrice(train.coachDTOList[0].seats[0].price.toString());
+        if (train.numberOfCoaches > 0 && train.coachDtoList[0].seats.length > 0) {
+            setSeatPrice(train.coachDtoList[0].seats[0].price.toString());
         } else {
             setSeatPrice("");
         }
-    };
+    };    
     
-
     const handleTrainNameChange = (event) => {
         setTrainName(event.target.value);
     };
