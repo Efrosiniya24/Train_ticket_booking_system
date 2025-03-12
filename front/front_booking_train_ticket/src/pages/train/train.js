@@ -90,7 +90,8 @@ const Train = () => {
                     number: seatIndex + 1,
                     price: parseFloat(seatPrice) || 0 
                 }))
-            }))
+            })),
+            numberOfCoaches: numberOfCoaches
         };
     
         try {
@@ -149,7 +150,8 @@ const Train = () => {
                     number: seatIndex + 1,
                     price: parseFloat(seatPrice) || 0 
                 }))
-            }))
+            })),
+            numberOfCoaches: numberOfCoaches
         };
     
         try {
