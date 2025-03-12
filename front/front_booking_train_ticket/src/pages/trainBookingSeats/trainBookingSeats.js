@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Seat from "../../components/seat/seat";
 import axios from "axios"; 
+import { Navigate } from 'react-router-dom';
 
 const TrainBookingSeats = () => {
     const location = useLocation();
@@ -14,6 +15,8 @@ const TrainBookingSeats = () => {
     const [selectedSeats, setSelectedSeats] = useState({});
     const departureStation = location.state?.departureStation || {};
     const arrivalStation = location.state?.arrivalStation || {};
+    const isAuthenticated = !!localStorage.getItem('accessToken');
+    const userRole = localStorage.getItem('userRole');
 
     useEffect(() => {
         if (routeData) {
@@ -86,6 +89,14 @@ const TrainBookingSeats = () => {
         }
     };
 
+    if (!isAuthenticated) {
+        return <Navigate to="/signIn" replace />;
+    }
+
+    if (userRole !== 'USER') {
+        return <Navigate to="/signIn" replace />;
+    }
+
     return ( 
         <div>
             <div className={userStyle.page}>
@@ -129,7 +140,11 @@ const TrainBookingSeats = () => {
                             ) : (
                                 <p>Выберите места</p>
                             )}
-                            <button className={style.book} onClick={handleBooking}>                                
+                            <button 
+                                className={style.book} 
+                                onClick={handleBooking} 
+                                disabled={!isAuthenticated || userRole !== 'USER'}
+                            >
                                 <p>Забронировать</p>
                             </button> 
                         </div>
