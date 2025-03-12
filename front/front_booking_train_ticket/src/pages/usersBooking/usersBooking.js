@@ -5,10 +5,13 @@ import searchStyle from "../searchRoute/searchRoute.module.css";
 import { useEffect, useState } from "react"; 
 import axios from "axios"; 
 import commonStyle from "../styles/forAllPAges.module.css";
+import { Navigate } from 'react-router-dom';
 
 const UsersBooking = () => {
 
     const [bookings, setBookings] = useState([]);
+    const isAuthenticated = !!localStorage.getItem('accessToken');
+    const userRole = localStorage.getItem('userRole');
 
     const fetchBookings = async () => {
         try {
@@ -25,6 +28,14 @@ const UsersBooking = () => {
     useEffect(() => {
         fetchBookings();
     }, []);
+
+    if (!isAuthenticated) {
+        return <Navigate to="/signIn" replace />;
+    }
+
+    if (userRole !== 'USER') {
+        return <Navigate to="/signIn" replace />;
+    }
 
     const formatDateTime = (dateTime) => {
         if (!dateTime) return "-"; 
