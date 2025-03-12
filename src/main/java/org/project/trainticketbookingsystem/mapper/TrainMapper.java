@@ -14,5 +14,7 @@ public interface TrainMapper {
 
     List<TrainDto> toTrainDTOList(List<TrainEntity> trainEntities);
 
+    @Mapping(source = "coachDtoList", target = "coachEntities")
+    @Mapping(source = "numberOfCoaches", target = "numberOfCoaches")
     TrainEntity toTrainEntity(TrainDto trainDTO);
 }
